@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -94,6 +94,8 @@ DATABASES = {
 }
 AUTH_USER_MODEL = 'zapapp.CustomUser'
 
+
+JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
