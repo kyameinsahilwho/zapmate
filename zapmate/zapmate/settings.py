@@ -95,7 +95,13 @@ DATABASES = {
 AUTH_USER_MODEL = 'zapapp.CustomUser'
 
 
-JWT_EXPIRATION_DELTA = datetime.timedelta(days=1)
+# settings.py
+
+# JWT settings for djangorestframework-simplejwt
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),  # Set the desired expiration time
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
