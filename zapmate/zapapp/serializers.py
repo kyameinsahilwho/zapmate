@@ -52,6 +52,14 @@ class CustomUserLoginSerializer(TokenObtainPairSerializer):
         return token
 
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
         model = Profile
-        fields = ('bio', 'profile_picture')
+        fields = ('bio', 'profile_picture','username')
+
+    def to_representation(self, instance):
+        if self.context['request'].method == 'GET':
+            self.fields['username'].read_only = False
+
+        return super().to_representation(instance)

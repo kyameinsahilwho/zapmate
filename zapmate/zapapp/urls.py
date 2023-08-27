@@ -5,7 +5,8 @@ urlpatterns = [
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user-retrieve-update-destroy'),
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('api/token/', UserLoginView.as_view(), name='token_obtain_pair'),
-    path('profiles/', ProfileListCreateView.as_view(), name='profile-list-create'),
+    path('profile/', ProfileListCreateView.as_view(), name='profile-list-create'),
+    path('profile-update/', ProfileUpdateAPIView.as_view(), name='profile-retrieve-update-destroy'),
 
     
 

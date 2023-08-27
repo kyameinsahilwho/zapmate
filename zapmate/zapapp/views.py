@@ -38,10 +38,19 @@ class ProfileListCreateView(generics.ListCreateAPIView):
         user_id = self.request.user.id
         serializer.save(user_id=user_id)
 
-class ProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profile.objects.all()
+class ProfileUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        user_id = self.request.user.id
+        if not user_id:
+            raise PermissionDenied('User ID not found in token.')
+        try:
+            profile = Profile.objects.get(user_id=user_id)
+        except Profile.DoesNotExist:
+            raise ('Profile not found.')
+        return profile
 
     def perform_update(self, serializer):
         user_id = self.request.user.id
