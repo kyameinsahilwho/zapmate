@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializer import CustomUserSerializer
 from .permissions import IsNotSuperuserOrStaff
 
 class UserListCreateView(generics.ListCreateAPIView):
