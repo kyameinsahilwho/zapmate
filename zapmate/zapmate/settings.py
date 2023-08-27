@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'zapapp',
 ]
 
@@ -91,7 +92,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+AUTH_USER_MODEL = 'zapapp.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
