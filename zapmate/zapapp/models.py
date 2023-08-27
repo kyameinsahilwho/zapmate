@@ -1,6 +1,5 @@
 from django.db import models
-
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin,Group,Permission
 from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
@@ -33,12 +32,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    
+
+    # Add related_name argument to avoid clash with User model
+    groups = models.ManyToManyField(Group, blank=True, related_name='customuser_set')
+    user_permissions = models.ManyToManyField(Permission, blank=True, related_name='customuser_set')
+
     objects = CustomUserManager()
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    
+
     def __str__(self):
         return self.email
 
