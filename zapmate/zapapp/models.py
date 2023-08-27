@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin,Group,Permission
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -56,6 +58,7 @@ class TimeCapsule(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='timecapsules')
     title = models.CharField(max_length=255)
     content = models.TextField()
+    hashtags = ArrayField(models.CharField(max_length=50), size=6, blank=True)
     publish_date = models.DateTimeField(default=timezone.now)
     available_date = models.DateTimeField()
     image = models.ImageField(upload_to='timecapsules/', blank=True, null=True)

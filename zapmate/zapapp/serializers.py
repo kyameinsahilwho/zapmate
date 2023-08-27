@@ -68,7 +68,7 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = TimeCapsule
-        fields = [ 'username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available']
+        fields = [ 'username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags']
         read_only_fields = ['id', 'publish_date', 'is_available']
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
