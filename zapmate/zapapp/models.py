@@ -51,3 +51,22 @@ class Profile(models.Model):
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     def __str__(self):
         return self.user.username
+
+class TimeCapsule(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='timecapsules')
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    publish_date = models.DateTimeField(default=timezone.now)
+    available_date = models.DateTimeField()
+    image = models.ImageField(upload_to='timecapsules/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+    def is_available(self):
+        return timezone.now() >= self.available_date
+    is_available.boolean = True
+    is_available.short_description = 'Available'
+
+    class Meta:
+        ordering = ['-publish_date']

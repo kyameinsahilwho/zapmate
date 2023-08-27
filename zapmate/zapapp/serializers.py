@@ -63,3 +63,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             self.fields['username'].read_only = False
 
         return super().to_representation(instance)
+
+class TimeCapsuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeCapsule
+        fields = ['id', 'user', 'title', 'content', 'publish_date', 'available_date', 'image', 'is_available']
+        read_only_fields = ['id', 'publish_date', 'is_available']

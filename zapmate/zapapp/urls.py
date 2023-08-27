@@ -7,6 +7,8 @@ urlpatterns = [
     path('api/token/', UserLoginView.as_view(), name='token_obtain_pair'),
     path('profile/', ProfileListCreateView.as_view(), name='profile-list-create'),
     path('profile-update/', ProfileUpdateAPIView.as_view(), name='profile-retrieve-update-destroy'),
+    path('timecapsule/', TimeCapsuleListCreateView.as_view(), name='timecapsule-list-create'),
+    
 
     
 

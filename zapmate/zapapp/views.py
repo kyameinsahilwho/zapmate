@@ -65,3 +65,16 @@ class ProfileUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
         if instance.user_id != user_id:
             raise PermissionDenied('You do not have permission to delete this profile.')
         instance.delete()
+
+class TimeCapsuleListCreateView(generics.ListCreateAPIView):
+    serializer_class = TimeCapsuleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return TimeCapsule.objects.filter(user_id=user_id)
+
+    def perform_create(self, serializer):
+        user_id = self.request.user.id
+        serializer.save(user_id=user_id)
+
