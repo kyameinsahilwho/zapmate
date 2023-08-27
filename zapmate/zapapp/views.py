@@ -1,3 +1,17 @@
 from django.shortcuts import render
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from .models import CustomUser
+from .serializers import CustomUserSerializer
+from .permissions import IsNotSuperuserOrStaff
 
-# Create your views here.
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser | IsNotSuperuserOrStaff]
+
+class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated, IsAdminUser | IsNotSuperuserOrStaff]
+
