@@ -6,6 +6,7 @@ from .serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import IsNotSuperuserOrStaff
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 
 class UserListCreateView(generics.ListCreateAPIView):
@@ -34,9 +35,26 @@ class ProfileListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user_id = self.request.user.id
+        if not user_id:
+            raise PermissionDenied('User ID not found in token.')
+        serializer.save(user_id=user_id)
 
 class ProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        user_id = self.request.user.id
+        if not user_id:
+            raise PermissionDenied('User ID not found in token.')
+        serializer.save(user_id=user_id)
+
+    def perform_destroy(self, instance):
+        user_id = self.request.user.id
+        if not user_id:
+            raise PermissionDenied('User ID not found in token.')
+        if instance.user_id != user_id:
+            raise PermissionDenied('You do not have permission to delete this profile.')
+        instance.delete()
