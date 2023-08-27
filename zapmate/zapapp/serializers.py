@@ -23,3 +23,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class CustomUserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'password', 'first_name', 'last_name','username')
+    
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        instance = self.Meta.model(**validated_data)
+        instance.set_password(password)
+        instance.save()
+        return instance
