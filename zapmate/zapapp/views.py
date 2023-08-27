@@ -36,8 +36,6 @@ class ProfileListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         user_id = self.request.user.id
-        if not user_id:
-            raise PermissionDenied('User ID not found in token.')
         serializer.save(user_id=user_id)
 
 class ProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):

@@ -47,10 +47,11 @@ class CustomUserLoginSerializer(TokenObtainPairSerializer):
         # Add custom claims
         if isinstance(user, CustomUser):
             token['username'] = user.username
+            token['user_id']=user.id
 
         return token
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('id', 'user', 'bio', 'profile_picture')
+        fields = ('bio', 'profile_picture')
