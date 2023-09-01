@@ -44,13 +44,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
 
     def __str__(self):
-        return self.email
+        return self.username
 
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    cover_picture = models.ImageField(upload_to='cover_pictures/', blank=True, null=True)
     def __str__(self):
         return self.user.username
 
@@ -74,4 +75,4 @@ class TimeCapsule(models.Model):
     is_available.short_description = 'Available'
 
     class Meta:
-        ordering = ['-publish_date']
+        ordering = ['publish_date']
