@@ -56,7 +56,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('bio', 'profile_picture','username')
+        fields = ('bio', 'profile_picture','username', 'cover_picture')
 
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
