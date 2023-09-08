@@ -34,18 +34,11 @@ export default function Profile() {
             <div className="relative md:p-1 rounded-full h-full max-md:w-16 bg-gradient-to-tr from-pink-400 to-pink-600 shadow-md hover:scale-110 duration-500 uk-animation-scale-up">
               <div className="relative md:w-40 md:h-40 h-16 w-16 rounded-full overflow-hidden md:border-[6px] border-gray-100 shrink-0 dark:border-slate-900">
                 <img
-                  src="assets/images/avatars/avatar-6.jpg"
+                  src={profileData.profile_picture}
                   alt=""
                   className="w-full h-full absolute object-cover"
                 />
               </div>
-              <button
-                type="button"
-                className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white shadow p-1.5 rounded-full sm:flex hidden"
-              >
-                {" "}
-                <ion-icon name="camera" className="text-2xl" />
-              </button>
             </div>
             <div className="max-w-2x flex-1">
               <h3 className="md:text-xl text-base font-semibold text-black dark:text-white capitalize">
