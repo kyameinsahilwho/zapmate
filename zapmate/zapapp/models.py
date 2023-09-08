@@ -50,8 +50,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
-    cover_picture = models.ImageField(upload_to='cover_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='images/profile_pictures/', blank=True, null=True)
     def __str__(self):
         return self.user.username
 
@@ -62,7 +61,7 @@ class TimeCapsule(models.Model):
     hashtags = ArrayField(models.CharField(max_length=50), size=6, blank=True)
     publish_date = models.DateTimeField(default=timezone.now)
     available_date = models.DateTimeField()
-    image = models.ImageField(upload_to='timecapsules/', blank=True, null=True)
+    image = models.ImageField(upload_to='images/timecapsules/', blank=True, null=True)
     is_private = models.BooleanField(default=False)
 
 

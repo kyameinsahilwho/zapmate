@@ -3,7 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import *
 from .serializers import *
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .permissions import IsNotSuperuserOrStaff
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
@@ -27,18 +27,24 @@ class UserRegistrationView(generics.CreateAPIView):
 class UserLoginView(TokenObtainPairView):
     serializer_class = CustomUserLoginSerializer
 
+class UserRefreshView(TokenRefreshView):
+    serializer_class = CustomUserRefreshSerializer
+
 # views.py
 
 class ProfileListCreateView(generics.ListCreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Profile.objects.filter(user_id=user_id)
 
     def perform_create(self, serializer):
         user_id = self.request.user.id
         serializer.save(user_id=user_id)
 
-class ProfileUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 

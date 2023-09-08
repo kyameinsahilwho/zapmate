@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,6 +51,20 @@ class CustomUserLoginSerializer(TokenObtainPairSerializer):
             token['user_id']=user.id
 
         return token
+    
+class CustomUserRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        refresh = RefreshToken(attrs['refresh'])
+        data = {'access': str(refresh.access_token)}
+        
+        # Assuming that the refresh token contains the user information.
+        user = CustomUser.objects.get(id=refresh.payload['user_id'])
+        
+        if user:
+            data['username'] = user.username
+            data['user_id'] = user.id
+
+        return data
 
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
@@ -61,8 +76,19 @@ class ProfileSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
             self.fields['username'].read_only = False
-
+            self.fields['first_name'] = serializers.SerializerMethodField()
+            self.fields['last_name'] = serializers.SerializerMethodField()
         return super().to_representation(instance)
+
+    def get_first_name(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        return user.first_name
+    def get_last_name(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        return user.last_name
+    
+
+
 
 class TimeCapsuleSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
