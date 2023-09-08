@@ -4148,9 +4148,6 @@ input:checked + .switch-button {
   --tw-bg-opacity: 0.8;
 }
 
-.bg-\[url\(\'\.\.\/images\/ad_pattern\.png\'\)\] {
-  background-image: url('../images/ad_pattern.png');
-}
 
 .bg-\[url\(\.\.\/images\/demos\/grid\.svg\)\] {
   background-image: url(../images/demos/grid.svg);
