@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../context/Auth";
+
 export default function Sidebar() {
+    const {logoutUser} = useContext(AuthContext);
     
     const navigate=useNavigate();
     function handleprofile(){
@@ -932,8 +936,9 @@ export default function Sidebar() {
                                 <li>
                                     {" "}
                                     <a
-                                        href="form-login.html"
+                                        onClick={logoutUser}
                                         className="flex gap-3 rounded-md p-2 hover:bg-secondery"
+
                                     >
                                         {" "}
                                         <ion-icon name="log-out-outline" className="text-lg" /> Log

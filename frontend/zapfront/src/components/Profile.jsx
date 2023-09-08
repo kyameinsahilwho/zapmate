@@ -44,7 +44,7 @@ export default function Profile() {
               <h3 className="md:text-xl text-base font-semibold text-black dark:text-white capitalize">
                 {profileData.first_name} {profileData.last_name}
               </h3>
-              <p className="sm:text-sm text-blue-600 mt-1 font-normal text-xs">
+              <p className="sm:text-sm font-semibold text-blue-600 mt-1 font-sp text-xs tacking-wide">
                 @{profileData.username}
               </p>
               <p className="text-lg mt-2 md:font-normal font-light">
@@ -90,13 +90,13 @@ export default function Profile() {
                   </button>
                   <button
                     type="button"
-                    className="button bg-pink-100 text-pink-600 border border-pink-200"
+                    className="button bg-blue-100 text-blue-600 border border-blue-200"
                   >
                     Unfallow
                   </button>
                   <button
                     type="submit"
-                    className="button bg-pink-600 text-white"
+                    className="button bg-blue-600 text-white"
                   >
                     Message
                   </button>
