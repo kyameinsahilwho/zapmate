@@ -31,7 +31,7 @@ export default function Profile() {
       <div className="main__inner">
         <div className="py-6 relative">
           <div className="flex md:gap-16 gap-4 max-md:flex-col">
-            <div className="relative md:p-1 rounded-full h-full max-md:w-16 bg-gradient-to-tr from-pink-400 to-pink-600 shadow-md hover:scale-110 duration-500 uk-animation-scale-up">
+            <div className="relative md:p-1 rounded-full h-full max-md:w-16 bg-gradient-to-tr from-blue-300 to-blue-600 shadow-md hover:scale-110 duration-500 uk-animation-scale-up">
               <div className="relative md:w-40 md:h-40 h-16 w-16 rounded-full overflow-hidden md:border-[6px] border-gray-100 shrink-0 dark:border-slate-900">
                 <img
                   src={profileData.profile_picture}
