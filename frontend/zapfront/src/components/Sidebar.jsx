@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext,useEffect,useState } from "react";
 import AuthContext from "../context/Auth";
 import { Link } from "react-router-dom";
-
+import Loader from "./Loader";
 export default function Sidebar() {
     const [loading, setLoading] = useState(true);
     const [profileData, setProfileData] = useState(null);
@@ -30,8 +30,21 @@ export default function Sidebar() {
 
         navigate('/profile');
     }
+    function handlesettings(){
+        navigate('/settings');
+    }
     if (loading) {
-        return <div className="text-black text-5xl text-center">loading...</div>;
+        return (<div
+            id="sidebar"
+            className="fixed top-0 left-0 z-40 max-md:top-auto max-md:bottom-0"
+        >
+            <div
+                id="sidebar__inner"
+                className="flex sside md:flex-col justify-between md:h-screen md:p-2 p-1 transition-all duration-500 bg-white shadow dark:bg-dark2 2xl:w-72 xl:w-60 max-xl:w-[73px] max-md:w-screen max-md:border-t max-md:dark:border-slate-700"
+            >
+                <Loader/>
+                </div>
+                </div>)
     }
 
     return (
@@ -821,7 +834,7 @@ export default function Sidebar() {
                                 <span className="max-xl:hidden"> Create </span>
                             </button>
                         </a>
-                        <a href="profile.html" className="max-md:!hidden active">
+                        <a onClick={handleprofile} className="max-md:!hidden active">
                             <svg
                                 id="icon__outline"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -909,7 +922,7 @@ export default function Sidebar() {
                                 <li>
                                     {" "}
                                     <a
-                                        href="setting.html"
+                                        onClick={handlesettings}
                                         className="flex gap-3 rounded-md p-2 hover:bg-secondery"
                                     >
                                         {" "}

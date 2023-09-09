@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect,useState } from "react";
 import jwtDecode from "jwt-decode";
+import Loader from "./Loader";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
@@ -24,7 +25,14 @@ export default function Profile() {
   }, []);
   
   if (loading) {
-    return <div className="text-black text-5xl text-center">loading...</div>;
+    return (<main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
+    <div className="main__inner">
+      <div className="py-6 relative">
+        <Loader/>
+        </div>
+      </div>
+    </main>
+        );
   }
   return (
     <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
