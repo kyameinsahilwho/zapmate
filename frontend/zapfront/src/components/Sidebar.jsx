@@ -872,7 +872,7 @@ export default function Sidebar() {
                             className="bg-white sm:w-64 2xl:w-[calc(100%-16px)] w-full shadow-lg border rounded-xl overflow-hidden max-md:!top-auto max-md:bottom-16 border2 dark:bg-dark2 hidden"
                             uk-drop="animation:uk-animation-slide-bottom-medium ;animate-out: true"
                         >
-                            <div className="w-full h-1.5 bg-gradient-to-r to-purple-500 via-red-500 from-pink-500" />
+                            <div className="w-full h-1.5 bg-gradient-to-r to-emerald-500 via-sky-500 from-indigo-500" />
                             <div className="p-4 text-xs font-medium">
                                 
                                 <a onClick={handleprofile}>
