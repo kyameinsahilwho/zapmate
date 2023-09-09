@@ -1,14 +1,37 @@
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useContext,useEffect,useState } from "react";
 import AuthContext from "../context/Auth";
+import { Link } from "react-router-dom";
 
 export default function Sidebar() {
+    const [loading, setLoading] = useState(true);
+    const [profileData, setProfileData] = useState(null);
+    async function fetchData() {
+        const accessToken = JSON.parse(localStorage.getItem("zapmateAuthTokens")).access;
+        const response = await fetch(`http://localhost:8000/zapapp/profile/?fields=username,profile_picture`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        const data = await response.json();
+        setProfileData(data[0]);
+        console.log(profileData);
+        setLoading(false);
+    }
+    useEffect(() => {
+        fetchData();
+    }, []);
     const {logoutUser} = useContext(AuthContext);
     
     const navigate=useNavigate();
     function handleprofile(){
-        
+
         navigate('/profile');
+    }
+    if (loading) {
+        return <div className="text-black text-5xl text-center">loading...</div>;
     }
 
     return (
@@ -833,13 +856,12 @@ export default function Sidebar() {
                     <div>
                         <a id="profile-link" onClick={handleprofile} className="flex items-center gap-3 p-3 group">
                             <img
-                                src="assets/images/avatars/avatar-7.jpg"
+                                src={profileData.profile_picture}
                                 alt=""
                                 className="rounded-full md:w-7 md:h-7 w-5 h-5 shrink-0"
                             />
-                            <span className="font-semibold text-sm max-xl:hidden">
-                                {" "}
-                                Monroe Parker{" "}
+                            <span className="font-semibold text-sm max-xl:hidden capitalize">
+                                {profileData.first_name} {profileData.last_name}
                             </span>
                             <ion-icon
                                 name="chevron-forward-outline"
@@ -852,34 +874,24 @@ export default function Sidebar() {
                         >
                             <div className="w-full h-1.5 bg-gradient-to-r to-purple-500 via-red-500 from-pink-500" />
                             <div className="p-4 text-xs font-medium">
-                                <a href="profile.html">
+                                
+                                <a onClick={handleprofile}>
                                     <img
-                                        src="assets/images/avatars/avatar-3.jpg"
+                                        src={profileData.profile_picture}
                                         className="w-8 h-8 rounded-full"
                                         alt=""
                                     />
                                     <div className="mt-2 space-y-0.5">
-                                        <div className="text-base font-semibold">
-                                            {" "}
-                                            Monroe Parker{" "}
+                                        <div className="text-base font-semibold capitalize">
+                                            {profileData.first_name} {profileData.last_name}
                                         </div>
-                                        <div className="text-gray-400 dark:text-white/80">
-                                            {" "}
-                                            @monroe{" "}
+                                        <div className="text-gray-400 dark:text-white/80  font-semibold">
+                                            @{profileData.username}
                                         </div>
                                     </div>
                                 </a>
+                                
                                 <div className="mt-3 flex gap-3.5">
-                                    <div>
-                                        {" "}
-                                        <a href="profile.html">
-                                            {" "}
-                                            <strong> 620K </strong>{" "}
-                                            <span className="text-gray-400 dark:text-white/80 ml-1">
-                                                Following{" "}
-                                            </span>{" "}
-                                        </a>{" "}
-                                    </div>
                                     <div>
                                         {" "}
                                         <a href="profile.html">
@@ -894,31 +906,6 @@ export default function Sidebar() {
                             </div>
                             <hr className="opacity-60" />
                             <ul className="text-sm font-semibold p-2">
-                                <li>
-                                    {" "}
-                                    <a
-                                        href="setting.html"
-                                        className="flex gap-3 rounded-md p-2 hover:bg-secondery"
-                                    >
-                                        {" "}
-                                        <ion-icon name="person-outline" className="text-lg" />{" "}
-                                        Profile{" "}
-                                    </a>
-                                </li>
-                                <li>
-                                    {" "}
-                                    <a
-                                        href="upgrade.html"
-                                        className="flex gap-3 rounded-md p-2 hover:bg-secondery"
-                                    >
-                                        {" "}
-                                        <ion-icon
-                                            name="bookmark-outline"
-                                            className="text-lg"
-                                        />{" "}
-                                        Upgrade{" "}
-                                    </a>
-                                </li>
                                 <li>
                                     {" "}
                                     <a
@@ -952,4 +939,4 @@ export default function Sidebar() {
             </div>
         
     );
-}
+    }

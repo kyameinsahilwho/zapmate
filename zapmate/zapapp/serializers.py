@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_dynamic_fields import DynamicFieldsMixin
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,7 +68,7 @@ class CustomUserRefreshSerializer(TokenRefreshSerializer):
 
         return data
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
 
     class Meta:

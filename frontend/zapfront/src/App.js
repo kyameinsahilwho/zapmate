@@ -1,6 +1,5 @@
 import logo from "./logo.svg";
 import "./App.css";
-import "../node_modules/uikit/dist/css/uikit.css";
 import UIkit from "uikit";
 import "../src/assets/css/style.css";
 import "../src/assets/css/tailwind.css";
