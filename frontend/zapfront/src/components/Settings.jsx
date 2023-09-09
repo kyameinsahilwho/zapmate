@@ -162,7 +162,7 @@ export default function Settings() {
                       <textarea
                         className="w-full"
                         rows={5}
-                        placeholder="Inter your Bio"
+                        placeholder="Enter your Bio"
                         defaultValue={""}
                       />
                     </div>
