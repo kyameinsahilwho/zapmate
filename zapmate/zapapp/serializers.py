@@ -80,6 +80,7 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             self.fields['username'].read_only = False
             self.fields['first_name'] = serializers.SerializerMethodField()
             self.fields['last_name'] = serializers.SerializerMethodField()
+            self.fields['email'] = serializers.SerializerMethodField()
         return super().to_representation(instance)
 
     def get_first_name(self, obj):
@@ -88,6 +89,9 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     def get_last_name(self, obj):
         user = CustomUser.objects.get(id=obj.user_id)
         return user.last_name
+    def get_email(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        return user.email
     
 
 

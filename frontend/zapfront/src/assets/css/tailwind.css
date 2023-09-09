@@ -593,7 +593,7 @@ select {
   --w-side-md:            240px;
   --w-side-small:         73px;
   --color-bgbody:         246 249 251;
-  --color-primary:        219 39 119;
+  --color-primary:        0 102 204;
   --color-primary-soft:   252 231 243;
   --color-secondery:      241 245 249;
 }

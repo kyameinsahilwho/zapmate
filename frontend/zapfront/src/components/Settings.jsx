@@ -1,6 +1,90 @@
+import { useState, useEffect } from "react";
+import Loader from "./Loader";
+import SuccesfulAlert from "./SuccesfulAlert";
 export default function Settings() {
+  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState(null);
+  const [username, setUsername] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [bio, setBio] = useState("");
+  const [email, setEmail] = useState("");
+  const [profile_picture, setProfilePicture] = useState(null);
+
+  async function fetchData() {
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const responseFetchData = await fetch(
+      `http://localhost:8000/zapapp/profile/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await responseFetchData.json();
+    setProfileData(data[0]);
+    setUsername(data[0].username);
+    setFirstName(data[0].first_name);
+    setLastName(data[0].last_name);
+    setBio(data[0].bio);
+    setProfilePicture(data[0].profile_picture);
+    setEmail(data[0].email);
+    setLoading(false);
+  }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const responseUpdate = await fetch(
+      `http://localhost:8000/zapapp/profile-update/`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          username: username,
+          first_name: first_name,
+          last_name: last_name,
+          bio: bio,
+          email: email,
+        }),
+      }
+    );
+    console.log(responseUpdate);
+    if (responseUpdate.status === 200) {
+      
+
+      function reloadPage() {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+      reloadPage();
+    }
+
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
+      <SuccesfulAlert message="Profile Updated Sucessfully!" />
       <div className="max-w-2xl mx-auto">
         {/* heading title */}
         <div className="page__heading py-6 mt-6">
@@ -15,7 +99,7 @@ export default function Settings() {
               <label htmlFor="file" className="cursor-pointer">
                 <img
                   id="img"
-                  src="assets/images/avatars/avatar-3.jpg"
+                  src={profileData.profile_picture}
                   className="object-cover w-full h-full rounded-full"
                   alt=""
                 />
@@ -42,11 +126,12 @@ export default function Settings() {
               </label>
             </div>
             <div className="flex-1">
-              <h3 className="md:text-xl text-base font-semibold text-black dark:text-white">
-                {" "}
-                Monroe Parker{" "}
+              <h3 className="md:text-xl text-base font-semibold text-black dark:text-white capitalize">
+                {profileData.first_name} {profileData.last_name}
               </h3>
-              <p className="text-sm text-blue-600 mt-1 font-normal">@Monroe</p>
+              <p className="text-sm text-blue-600 mt-1  font-semibold">
+                @{profileData.username}
+              </p>
             </div>
           </div>
           <hr className="border-t border-gray-100 dark:border-slate-700" />
@@ -88,7 +173,7 @@ export default function Settings() {
                     className="inline-block p-4 pt-2 border-b-2 border-transparent aria-expanded:text-blue-500 aria-expanded:border-blue-500"
                   >
                     {" "}
-                    password
+                    Password
                   </a>{" "}
                 </li>
               </ul>
@@ -119,100 +204,82 @@ export default function Settings() {
           >
             {/* tab user basic info */}
             <div>
-              <div>
-                <div className="space-y-6">
-                  <div className="md:flex items-center gap-10">
-                    <label className="md:w-32 text-right"> Username </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <input
-                        type="text"
-                        placeholder="Monroe"
-                        className="lg:w-1/2 w-full"
-                      />
+              <form method="POST" onSubmit={handleSubmit}>
+                <div>
+                  <div className="space-y-6">
+                    <div className="md:flex items-center gap-10">
+                      <label className="md:w-32 text-right"> Username </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <input
+                          type="text"
+                          placeholder={profileData.username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="lg:w-1/2 w-full"
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-center gap-10">
+                      <label className="md:w-32 text-right"> Name </label>
+                      <div className="flex-1 max-md:mt-4 flex gap-4">
+                        <input
+                          type="text"
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder={profileData.first_name}
+                          className="lg:w-1/2 w-full"
+                        />
+                        <input
+                          type="text"
+                          placeholder={profileData.last_name}
+                          onChange={(e) => setLastName(e.target.value)}
+                          className="lg:w-1/2 w-full"
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-center gap-10">
+                      <label className="md:w-32 text-right"> Email </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <input
+                          type="text"
+                          placeholder={profileData.email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-start gap-10">
+                      <label className="md:w-32 text-right"> Bio </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <textarea
+                          className="w-full"
+                          rows={5}
+                          placeholder={profileData.bio}
+                          onChange={(e) => setBio(e.target.value)}
+                          defaultValue={""}
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-center gap-10">
+                      <label className="md:w-32 text-right"> Gender </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <select className="!border-0 !rounded-md lg:w-1/2 w-full">
+                          <option value={1}>Male</option>
+                          <option value={2}>Female</option>
+                          <option value={3}>Other</option>
+                          <option value={4}>Rather not say</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                  <div className="md:flex items-center gap-10">
-                    <label className="md:w-32 text-right"> Name </label>
-                    <div className="flex-1 max-md:mt-4 flex gap-4">
-                      <input
-                        type="text"
-                        placeholder="Monroe"
-                        className="lg:w-1/2 w-full"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Doe"
-                        className="lg:w-1/2 w-full"
-                      />
-                    </div>
-                  </div>
-                  <div className="md:flex items-center gap-10">
-                    <label className="md:w-32 text-right"> Email </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <input
-                        type="text"
-                        placeholder="info@mydomain.com"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                  <div className="md:flex items-start gap-10">
-                    <label className="md:w-32 text-right"> Bio </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <textarea
-                        className="w-full"
-                        rows={5}
-                        placeholder="Enter your Bio"
-                        defaultValue={""}
-                      />
-                    </div>
-                  </div>
-                  <div className="md:flex items-center gap-10">
-                    <label className="md:w-32 text-right"> Gender </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <select className="!border-0 !rounded-md lg:w-1/2 w-full">
-                        <option value={1}>Male</option>
-                        <option value={2}>Female</option>
-                        <option value={3}>Other</option>
-                        <option value={4}>Rather not say</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="md:flex items-start gap-10 " hidden>
-                    <label className="md:w-32 text-right"> Avatar </label>
-                    <div className="flex-1 flex items-center gap-5 max-md:mt-4">
-                      <img
-                        src="assets/images/avatars/avatar-3.jpg"
-                        alt=""
-                        className="w-10 h-10 rounded-full"
-                      />
-                      <button
-                        type="submit"
-                        className="px-4 py-1 rounded-full bg-slate-100/60 border dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-                      >
-                        {" "}
-                        Change
-                      </button>
-                    </div>
+                  <div className="flex items-center justify-center gap-4 mt-16">
+                    <button
+                      type="submit"
+                      className="button lg:px-10 bg-primary text-white max-md:flex-1 "
+                    >
+                      Save <span className="ripple-overlay" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex items-center justify-center gap-4 mt-16">
-                  <button
-                    type="submit"
-                    className="button lg:px-6 bg-secondery max-md:flex-1"
-                  >
-                    {" "}
-                    Cancle
-                  </button>
-                  <button
-                    type="submit"
-                    className="button lg:px-10 bg-primary text-white max-md:flex-1"
-                  >
-                    {" "}
-                    Save <span className="ripple-overlay" />
-                  </button>
-                </div>
-              </div>
+              </form>
             </div>
             {/* tab alerts */}
             <div>
@@ -304,19 +371,13 @@ export default function Settings() {
                 <div className="flex items-center justify-center gap-4 mt-16">
                   <button
                     type="submit"
-                    className="button lg:px-6 bg-secondery max-md:flex-1"
-                  >
-                    {" "}
-                    Cancle
-                  </button>
-                  <button
-                    type="submit"
                     className="button lg:px-10 bg-primary text-white max-md:flex-1"
                   >
                     {" "}
                     Save
                   </button>
                 </div>
+                
               </div>
             </div>
             {/* tab password*/}
@@ -374,13 +435,6 @@ export default function Settings() {
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-4 mt-16">
-                  <button
-                    type="submit"
-                    className="button lg:px-6 bg-secondery max-md:flex-1"
-                  >
-                    {" "}
-                    Cancle
-                  </button>
                   <button
                     type="submit"
                     className="button lg:px-10 bg-primary text-white max-md:flex-1"

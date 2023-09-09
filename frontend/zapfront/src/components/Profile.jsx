@@ -5,6 +5,7 @@ import Loader from "./Loader";
 export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
+  
   async function fetchData() {
     const accessToken = JSON.parse(localStorage.getItem("zapmateAuthTokens")).access;
     const response = await fetch(`http://localhost:8000/zapapp/profile/`, {
@@ -16,7 +17,7 @@ export default function Profile() {
     });
     const data = await response.json();
     setProfileData(data[0]);
-    console.log(profileData);
+    
     setLoading(false);
 
   }
@@ -25,14 +26,9 @@ export default function Profile() {
   }, []);
   
   if (loading) {
-    return (<main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
-    <div className="main__inner">
-      <div className="py-6 relative">
-        <Loader/>
-        </div>
-      </div>
-    </main>
-        );
+    return (<div className="flex justify-center items-center h-screen">
+    <Loader />
+  </div>);
   }
   return (
     <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">

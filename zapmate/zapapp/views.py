@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.contrib.auth import get_user_model
+
 from .models import *
 from .serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -62,7 +64,15 @@ class ProfileUpdateView(generics.RetrieveUpdateDestroyAPIView):
         user_id = self.request.user.id
         if not user_id:
             raise PermissionDenied('User ID not found in token.')
+        user_model = get_user_model()
+        user = user_model.objects.get(id=user_id)
+        user.first_name = self.request.data.get('first_name', user.first_name)
+        user.last_name = self.request.data.get('last_name', user.last_name)
+        user.email = self.request.data.get('email', user.email)
+        user.username = self.request.data.get('username', user.username)
+        user.save()
         serializer.save(user_id=user_id)
+        
 
     def perform_destroy(self, instance):
         user_id = self.request.user.id
