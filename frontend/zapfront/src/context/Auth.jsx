@@ -11,11 +11,12 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState( localStorage.getItem('zapmateAuthTokens')?jwtDecode(JSON.parse(localStorage.getItem('zapmateAuthTokens')).access) : null);
   const [authTokens, setAuthTokens] = useState( localStorage.getItem('zapmateAuthTokens')?JSON.parse(localStorage.getItem('zapmateAuthTokens')) : null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(  localStorage.getItem('zapmateAuthTokens')?true : false);
 
   const loginUser = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:8000/zapapp/api/token/", {
         method: "POST",
@@ -40,11 +41,14 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(data);
         setUser(jwtDecode(data.access));
         setIsAuthenticated(true);
+        setLoading(false);
         navigate("/", { replace: true });
       } else {
+        setLoading(false);
         alert("Something went wrong while logging in the user!");
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error during login:", error);
     }
   };
@@ -122,6 +126,7 @@ export const AuthProvider = ({ children }) => {
     loginUser,
     logoutUser,
     isAuthenticated,
+    loading,
   };
   return (
     <AuthContext.Provider value={contextData}>

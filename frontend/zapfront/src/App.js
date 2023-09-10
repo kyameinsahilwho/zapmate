@@ -12,12 +12,14 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import { useContext } from "react";
 import Settings from "./components/Settings";
+import Loader from "./components/Loader";
 function App() {
-  const { user } = useContext(AuthContext);
+  const { user,loading } = useContext(AuthContext);
   const location = useLocation();
 
   return (
     <div id="wrapper">
+      {loading && <Loader />}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

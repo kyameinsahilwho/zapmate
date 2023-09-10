@@ -6,9 +6,11 @@ from drf_dynamic_fields import DynamicFieldsMixin
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    old_password = serializers.CharField(write_only=True, required=False)
+    new_password = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = CustomUser
-        fields = ('id', 'email', 'first_name', 'last_name', 'date_joined', 'is_active', 'is_staff')
+        fields = ('id', 'email', 'first_name', 'last_name', 'date_joined', 'is_active', 'is_staff','old_password','new_password')
         read_only_fields = ('id', 'date_joined', 'is_staff')
 
     def create(self, validated_data):
@@ -20,11 +22,20 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return instance
 
     def update(self, instance, validated_data):
-        password = validated_data.pop('password', None)
+        print(validated_data)
+        old_password = validated_data.pop('old_password', None)
+        new_password = validated_data.pop('new_password', None)
+        print(old_password,new_password)
+
+        if old_password is not None and new_password is not None:
+            if instance.check_password(old_password):
+                instance.set_password(new_password)
+            else:
+                raise serializers.ValidationError("Old password is incorrect")
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        if password is not None:
-            instance.set_password(password)
+
         instance.save()
         return instance
 

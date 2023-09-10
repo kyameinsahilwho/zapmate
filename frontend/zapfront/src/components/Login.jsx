@@ -1,21 +1,24 @@
-import { useState,useContext,useEffect } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthContext from '../context/Auth'
+import AuthContext from "../context/Auth";
 import logo from "../assets/images/logo.png";
+
 function Login() {
-  let { loginUser} = useContext(AuthContext);
-   
+  let { loginUser } = useContext(AuthContext);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const onchangeUsername = (event) => {
     console.log(event.target.value);
     setUsername(event.target.value);
   };
+
   const onchangePassword = (event) => {
     console.log(event.target.value);
     setPassword(event.target.value);
   };
-  
+
   const navigate = useNavigate();
 
   return (
@@ -34,10 +37,10 @@ function Login() {
             method="POST"
             action="#"
             className="space-y-3"
-            uk-scrollspy="target: > *; cls: uk-animation-scale-up; delay: 100 ;repeat: true"
+            data-uk-scrollspy="target: > *; cls: uk-animation-scale-up; delay: 100 ;repeat: true"
           >
             <input
-              className="!w-full"
+              className="w-full"
               id="username"
               name="username"
               type="text"
@@ -47,7 +50,7 @@ function Login() {
               required
             />
             <input
-              className="!w-full"
+              className="w-full"
               id="password"
               name="password"
               type="password"
@@ -64,7 +67,7 @@ function Login() {
             </a>
             <button
               type="submit"
-              className="font-medium w-full rounded-lg bg-slate-900 py-1.5 px-4 text-white h-[38px] active:scale-[0.97] transition-all duration-150"
+              className="font-medium w-full rounded-lg bg-slate-900 py-1.5 px-4 text-white h-[38px] active:scale-97 transition-all duration-150"
             >
               {" "}
               <span>Sign in</span>{" "}
@@ -75,7 +78,7 @@ function Login() {
             <button
               type="button"
               onClick={() => navigate("/signup")}
-              className="font-medium w-full rounded-lg bg-white py-1.5 px-4 text-slate-900 h-[38px] active:scale-[0.97] transition-all duration-150"
+              className="font-medium w-full rounded-lg bg-white py-1.5 px-4 text-slate-900 h-[38px] active:scale-97 transition-all duration-150"
             >
               {" "}
               <span>New? Sign Up</span>{" "}
@@ -86,4 +89,5 @@ function Login() {
     </div>
   );
 }
+
 export default Login;

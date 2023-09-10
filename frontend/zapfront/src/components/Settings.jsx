@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Loader from "./Loader";
-import SuccesfulAlert from "./SuccesfulAlert";
+import jwtDecode from "jwt-decode";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
@@ -10,6 +12,15 @@ export default function Settings() {
   const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
   const [profile_picture, setProfilePicture] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
 
   async function fetchData() {
     const accessToken = JSON.parse(
@@ -35,7 +46,7 @@ export default function Settings() {
     setEmail(data[0].email);
     setLoading(false);
   }
-  async function handleSubmit(e) {
+  async function handleProfileSubmit(e) {
     e.preventDefault();
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
@@ -59,16 +70,37 @@ export default function Settings() {
     );
     console.log(responseUpdate);
     if (responseUpdate.status === 200) {
-      
-
-      function reloadPage() {
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      }
-      reloadPage();
+      toast.success('Profile updated successfully');  
+      fetchData();
     }
-
+  }
+  async function handlePasswordSubmit(e) {
+    e.preventDefault();
+    
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const responseUpdate = await fetch(
+      `http://localhost:8000/zapapp/users/${jwtDecode(accessToken).user_id}/`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          old_password: oldPassword,
+          new_password: newPassword,
+        }),
+      }
+    );
+    console.log(responseUpdate);
+    if (responseUpdate.status === 200) {
+      toast.success('Password updated successfully');  
+    }
+    if (responseUpdate.status === 400) {
+      toast.error('Old password is incorrect');
+    }
   }
 
   useEffect(() => {
@@ -84,7 +116,7 @@ export default function Settings() {
 
   return (
     <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
-      <SuccesfulAlert message="Profile Updated Sucessfully!" />
+      <ToastContainer />
       <div className="max-w-2xl mx-auto">
         {/* heading title */}
         <div className="page__heading py-6 mt-6">
@@ -147,34 +179,42 @@ export default function Settings() {
                 uk-switcher="connect: #setting_tab ; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium"
               >
                 <li className="w-auto pr-2.5">
-                  {" "}
                   <a
                     href="#"
-                    className="inline-block p-4 pt-2 border-b-2 border-transparent aria-expanded:text-blue-500 aria-expanded:border-blue-500"
+                    className={`inline-block p-4 pt-2 border-b-2 border-transparent ${
+                      activeTab === 0
+                        ? "text-blue-500 border-blue-500 border-b-2"
+                        : ""
+                    }`}
+                    onClick={() => handleTabClick(0)}
+                    aria-expanded={activeTab === 0 ? "true" : "false"}
                   >
-                    {" "}
-                    General{" "}
-                  </a>{" "}
+                    General
+                  </a>
                 </li>
                 <li className="w-auto pr-2.5">
-                  {" "}
                   <a
                     href="#"
-                    className="inline-block p-4 pt-2 border-b-2 border-transparent aria-expanded:text-blue-500 aria-expanded:border-blue-500"
+                    className={`inline-block p-4 pt-2 border-b-2 border-transparent ${
+                      activeTab === 1 ? "text-blue-500 border-blue-500" : ""
+                    }`}
+                    onClick={() => handleTabClick(1)}
+                    aria-expanded={activeTab === 1 ? "true" : "false"}
                   >
-                    {" "}
                     Alerts
-                  </a>{" "}
+                  </a>
                 </li>
                 <li className="w-auto pr-2.5">
-                  {" "}
                   <a
                     href="#"
-                    className="inline-block p-4 pt-2 border-b-2 border-transparent aria-expanded:text-blue-500 aria-expanded:border-blue-500"
+                    className={`inline-block p-4 pt-2 border-b-2 border-transparent ${
+                      activeTab === 2 ? "text-blue-500 border-blue-500" : ""
+                    }`}
+                    onClick={() => handleTabClick(2)}
+                    aria-expanded={activeTab === 2 ? "true" : "false"}
                   >
-                    {" "}
                     Password
-                  </a>{" "}
+                  </a>
                 </li>
               </ul>
             </nav>
@@ -183,16 +223,14 @@ export default function Settings() {
               href="#"
               uk-slider-item="previous"
             >
-              {" "}
-              <ion-icon name="chevron-back" className="text-2xl ml-1" />{" "}
+              <ion-icon name="chevron-back" className="text-2xl ml-1" />
             </a>
             <a
               className="absolute right-0 -translate-y-1/2 top-1/2 flex items-center w-20 h-full p-2.5 justify-end rounded-xl bg-gradient-to-l from-white via-white dark:from-slate-800 dark:via-slate-800"
               href="#"
               uk-slider-item="next"
             >
-              {" "}
-              <ion-icon name="chevron-forward" className="text-2xl mr-1" />{" "}
+              <ion-icon name="chevron-forward" className="text-2xl mr-1" />
             </a>
           </div>
         </div>
@@ -204,7 +242,7 @@ export default function Settings() {
           >
             {/* tab user basic info */}
             <div>
-              <form method="POST" onSubmit={handleSubmit}>
+              <form method="POST" onSubmit={handleProfileSubmit}>
                 <div>
                   <div className="space-y-6">
                     <div className="md:flex items-center gap-10">
@@ -377,72 +415,99 @@ export default function Settings() {
                     Save
                   </button>
                 </div>
-                
               </div>
             </div>
             {/* tab password*/}
             <div>
               <div>
-                <div className="space-y-6">
-                  <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
-                    <label className="md:w-40 text-right">
+                <form method="POST" onSubmit={handlePasswordSubmit}>
+                  <div className="space-y-6">
+                    <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
+                      <label className="md:w-40 text-right">
+                        {" "}
+                        Current Password{" "}
+                      </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <input
+                          type="password"
+                          placeholder="******"
+                          className="w-full"
+                          onChange={(e) => setOldPassword(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
+                      <label className="md:w-40 text-right">
+                        {" "}
+                        New password{" "}
+                      </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <input
+                          type="password"
+                          placeholder="******"
+                          className="w-full"
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          onBlur={(e) => {
+                            if (newPassword !== repeatPassword) {
+                              setPasswordError(true);
+                            }
+                            else{
+                              setPasswordError(false);
+                            }
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
+                      <label className="md:w-40 text-right">
+                        {" "}
+                        Repeat password{" "}
+                      </label>
+                      <div className={`flex-1 max-md:mt-4 ${passwordError ?  "border-red-500" : ""  }`}>
+                        <input
+                          type="password"
+                          placeholder="******"
+                          className="w-full"
+                          onChange={(e) => setRepeatPassword(e.target.value)}
+                          onBlur={(e) => {
+                            if (newPassword !== repeatPassword) {
+                              setPasswordError(true);
+                            }
+                            else{
+                              setPasswordError(false);
+                            }
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <hr className="border-gray-100 dark:border-gray-700" />
+                    <div className="md:flex items-center gap-16 justify-between">
+                      <label className="md:w-40 text-right">
+                        {" "}
+                        Two-factor authentication{" "}
+                      </label>
+                      <div className="flex-1 max-md:mt-4">
+                        <select className="w-full !border-0 !rounded-md">
+                          <option value={1}>Enable</option>
+                          <option value={2}>Disable</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 mt-16">
+                    <button
+                      type="submit"
+                      className="button lg:px-10 bg-primary text-white max-md:flex-1"
+                      disabled={passwordError}
+                    >
                       {" "}
-                      Current Password{" "}
-                    </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <input
-                        type="password"
-                        placeholder="******"
-                        className="w-full"
-                      />
-                    </div>
+                      Change Password
+                    </button>
                   </div>
-                  <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
-                    <label className="md:w-40 text-right"> New password </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <input
-                        type="password"
-                        placeholder="******"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                  <div className="md:flex items-center gap-16 justify-between max-md:space-y-3">
-                    <label className="md:w-40 text-right">
-                      {" "}
-                      Repeat password{" "}
-                    </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <input
-                        type="password"
-                        placeholder="******"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                  <hr className="border-gray-100 dark:border-gray-700" />
-                  <div className="md:flex items-center gap-16 justify-between">
-                    <label className="md:w-40 text-right">
-                      {" "}
-                      Two-factor authentication{" "}
-                    </label>
-                    <div className="flex-1 max-md:mt-4">
-                      <select className="w-full !border-0 !rounded-md">
-                        <option value={1}>Enable</option>
-                        <option value={2}>Disable</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 mt-16">
-                  <button
-                    type="submit"
-                    className="button lg:px-10 bg-primary text-white max-md:flex-1"
-                  >
-                    {" "}
-                    Save
-                  </button>
-                </div>
+                </form>
               </div>
             </div>
           </div>

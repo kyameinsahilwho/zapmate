@@ -937,7 +937,7 @@ export default function Sidebar() {
                                     {" "}
                                     <a
                                         onClick={logoutUser}
-                                        className="flex gap-3 rounded-md p-2 hover:bg-secondery"
+                                        className="flex gap-3 rounded-md p-2 hover:bg-rose-500 hover:text-white"
 
                                     >
                                         {" "}

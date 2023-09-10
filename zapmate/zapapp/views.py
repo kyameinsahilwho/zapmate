@@ -17,9 +17,11 @@ class UserListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser | IsNotSuperuserOrStaff]
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated, IsAdminUser | IsNotSuperuserOrStaff]
+    def get_queryset(self):
+        queryset = CustomUser.objects.filter(id=self.request.user.id)
+        return queryset
 
 
 class UserRegistrationView(generics.CreateAPIView):

@@ -108,7 +108,7 @@ AUTH_USER_MODEL = 'zapapp.CustomUser'
 
 # JWT settings for djangorestframework-simplejwt
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),  # Set the desired expiration time
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),  # Set the desired expiration time
 }
 
 # Password validation
