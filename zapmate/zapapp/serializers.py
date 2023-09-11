@@ -50,6 +50,7 @@ class CustomUserRegistrationSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.set_password(password)
         instance.save()
+        Profile.objects.create(user=instance)
         return instance
     
 
