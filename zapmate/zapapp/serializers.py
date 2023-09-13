@@ -3,8 +3,7 @@ from .models import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer,TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_dynamic_fields import DynamicFieldsMixin
-
-
+import json
 class CustomUserSerializer(serializers.ModelSerializer):
     old_password = serializers.CharField(write_only=True, required=False)
     new_password = serializers.CharField(write_only=True, required=False)
@@ -93,6 +92,7 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
             self.fields['first_name'] = serializers.SerializerMethodField()
             self.fields['last_name'] = serializers.SerializerMethodField()
             self.fields['email'] = serializers.SerializerMethodField()
+            self.fields['total_capsules'] = serializers.SerializerMethodField()
         return super().to_representation(instance)
 
     def get_first_name(self, obj):
@@ -104,12 +104,18 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     def get_email(self, obj):
         user = CustomUser.objects.get(id=obj.user_id)
         return user.email
+    def get_total_capsules(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        return TimeCapsule.objects.filter(user=user).count()
+
     
 
 
 
 class TimeCapsuleSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+
+
     class Meta:
         model = TimeCapsule
         fields = [ 'username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private']
@@ -119,3 +125,5 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
             self.fields['username'].read_only = False
 
         return super().to_representation(instance)
+    
+    

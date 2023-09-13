@@ -58,7 +58,7 @@ class TimeCapsule(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='timecapsules')
     title = models.CharField(max_length=255)
     content = models.TextField()
-    hashtags = ArrayField(models.CharField(max_length=50), size=6, blank=True)
+    hashtags = ArrayField(models.CharField(max_length=50), size=30, blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
     available_date = models.DateTimeField()
     image = models.ImageField(upload_to='images/timecapsules/', blank=True, null=True)

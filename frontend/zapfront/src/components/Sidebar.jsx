@@ -39,6 +39,7 @@ export default function Sidebar() {
   function handlesettings() {
     navigate("/settings");
   }
+
   if (loading) {
     return (
       <div
@@ -60,7 +61,7 @@ export default function Sidebar() {
 
   return (
     <>
-   
+    {createPost && <CreatePost handleCreatePost={handleCreatePost} />}
     <div
       id="sidebar"
       className="fixed top-0 left-0 z-40 max-md:top-auto max-md:bottom-0"
@@ -814,8 +815,7 @@ export default function Sidebar() {
           <a> 
             <button
               className="flex items-center gap-3 w-full"
-              data-uk-toggle="target: #create-post"
-              
+              onClick={handleCreatePost}
             >
               <svg
                 id="icon__outline"
@@ -965,7 +965,6 @@ export default function Sidebar() {
         </div>
       </div>
     </div>
-    <CreatePost/>
     </>
     
   );

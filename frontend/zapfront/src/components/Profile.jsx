@@ -73,13 +73,13 @@ export default function Profile() {
               <div className="flex md:items-end justify-between md:mt-8 mt-4 max-md:flex-col gap-4">
                 <div className="flex sm:gap-10 gap-6 sm:text-sm text-xs max-sm:absolute max-sm:top-10 max-sm:left-36">
                   <div>
-                    <p>Capsules</p>
+                    <p className="font-medium">Capsules</p>
                     <h3 className="sm:text-xl sm:font-bold mt-1 text-black dark:text-white text-base font-normal">
-                      162
+                      {profileData.total_capsules}
                     </h3>
                   </div>
                   <div>
-                    <p>Followers</p>
+                    <p className="font-medium">Followers</p>
                     <h3 className="sm:text-xl sm:font-bold mt-1 text-black dark:text-white text-base font-normal">
                       8,542
                     </h3>

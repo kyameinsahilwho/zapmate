@@ -93,6 +93,8 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
         return TimeCapsule.objects.filter(user_id=user_id)
 
     def perform_create(self, serializer):
+        hashtags=self.request.POST.get('hashtags')
+        hashtags = hashtags.split(',')
         user_id = self.request.user.id
-        serializer.save(user_id=user_id)
+        serializer.save(user_id=user_id,hashtags=hashtags)
 
