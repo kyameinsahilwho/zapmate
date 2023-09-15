@@ -58,10 +58,11 @@ export default function Sidebar() {
   function handleCreatePost() {
     setCreatePost(!createPost);
     }
+    
 
   return (
     <>
-    {createPost && <CreatePost handleCreatePost={handleCreatePost} />}
+    {<CreatePost handleCreatePost={handleCreatePost} createPost={createPost} />}
     <div
       id="sidebar"
       className="fixed top-0 left-0 z-40 max-md:top-auto max-md:bottom-0"

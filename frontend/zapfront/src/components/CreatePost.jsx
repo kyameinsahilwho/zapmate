@@ -56,9 +56,13 @@ export default function CreatePost(props) {
     const file = e.target.files[0];
     setImage(file);
   };
+    
+  if(!props.createPost){
+    return null;
+  }
   return (
-    <div className="lg:p-20 max-lg:!items-start">
-      <div className="tt relative mx-auto bg-white shadow-xl rounded-lg max-lg:w-full dark:bg-dark2">
+    <div className="lg:p-20 max-lg:!items-start w-full h-full z-[9999] top-[50%] left-[50%] absolute flex justify-center items-center translate-x-[-50%] translate-y-[-50%] backdrop-blur-sm">
+      <div className="tt relative mx-auto bg-white shadow-xl rounded-lg max-lg:w-[902px] dark:bg-dark2">
         <ul className=" p-3.5 border-b text-center text-sm font-semibold text-black dark:text-white dark:border-slate-700">
           <li>
             <a
@@ -344,4 +348,6 @@ export default function CreatePost(props) {
       </div>
     </div>
   );
+
+  
 }

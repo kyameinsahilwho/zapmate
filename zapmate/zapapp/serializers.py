@@ -118,8 +118,8 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimeCapsule
-        fields = [ 'username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private']
-        read_only_fields = ['id', 'publish_date', 'is_available']
+        fields = [ 'id','username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private']
+        read_only_fields = [ 'publish_date', 'is_available']
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
             self.fields['username'].read_only = False
