@@ -56,18 +56,20 @@ export default function CreatePost(props) {
     const file = e.target.files[0];
     setImage(file);
   };
-    
-  if(!props.createPost){
+
+  if (!props.createPost) {
     return null;
   }
   return (
-    <div className="lg:p-20 max-lg:!items-start w-full h-full z-[9999] top-[50%] left-[50%] absolute flex justify-center items-center translate-x-[-50%] translate-y-[-50%] backdrop-blur-sm">
-      <div className="tt relative mx-auto bg-white shadow-xl rounded-lg max-lg:w-[902px] dark:bg-dark2">
+    <>
+      <div className="lg:p-20 max-lg:!items-start w-full h-full z-[100] top-[50%] left-[50%] absolute flex justify-center items-center translate-x-[-50%] translate-y-[-50%] backdrop-blur-sm"></div>
+
+      <div className="tt absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] h-fit mx-auto bg-white shadow-xl rounded-lg w-[90%] max-w-[902px]  dark:bg-dark2">
         <ul className=" p-3.5 border-b text-center text-sm font-semibold text-black dark:text-white dark:border-slate-700">
-          <li>
+          <li className="flex justify-between center" >
             <a
               onClick={props.handleCreatePost}
-              className="absolute top-0 m-3.5 left-0"
+              className=""
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +91,7 @@ export default function CreatePost(props) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="text-white bg-blue-600 rounded-lg py-1.5 px-5 text-sm absolute top-0 m-2.5 right-0 uk-animation-slide-right-small"
+              className="text-white bg-blue-600 rounded-lg py-1.5 px-5 text-sm m-2.5 uk-animation-slide-right-small"
             >
               {" "}
               Share{" "}
@@ -99,7 +101,7 @@ export default function CreatePost(props) {
 
         <div className="lg:inline-flex">
           <div className="lg:w-[600px] w-full">
-            <div className="w-full lg:h-[600px] h-78 relative overflow-hidden flex justify-center items-center">
+            <div className="w-full lg:h-[450px] h-78 relative overflow-hidden flex justify-center items-center">
               <label
                 htmlFor="addPostUrl"
                 className="w-full h-full absolute inset-0 z-10 hover: cursor-pointer"
@@ -161,7 +163,7 @@ export default function CreatePost(props) {
             </div>
           </div>
           <div className="relative w-auto border-l dark:border-slate-700"></div>
-          <div className="lg:w-[300px] lg:max-h-[600px] overflow-y-auto before:uk-animation-slide-right-small">
+          <div className="lg:w-[300px] lg:max-h-[600px] h-[450px] overflow-y-auto before:uk-animation-slide-right-small">
             <div>
               <textarea
                 name
@@ -346,8 +348,6 @@ export default function CreatePost(props) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
-
-  
 }
