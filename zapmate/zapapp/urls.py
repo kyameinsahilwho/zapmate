@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile-update/', ProfileUpdateView.as_view(), name='profile-retrieve-update-destroy'),
     path('timecapsule/', TimeCapsuleListCreateView.as_view(), name='timecapsule-list-create'),
     path('comment/', CommentListCreateView.as_view(), name='comment-list-create'),
+    path('comment/<int:pk>/', CommentRetrieveUpdateDestroyView.as_view(), name='comment-retrieve-update-destroy'),
     path('like/', LikeListCreateView.as_view(), name='like-list-create'),
     path('like/<int:pk>/', LikeRetrieveDestroyView.as_view(), name='like-retrieve-update-destroy'   ),
     path('follows/', FollowsListCreateView.as_view(), name='follows-list-create'),

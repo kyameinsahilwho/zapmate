@@ -155,7 +155,7 @@ class FollowsSerializer(serializers.ModelSerializer):
     follows_username = serializers.CharField(source='follows.username', read_only=True)
     class Meta:
         model = Follows
-        fields = ['id','username','follows_username', 'follow_date']
+        fields = ['id','username','follows_username', 'follow_date','follows']
         read_only_fields = ['follow_date']
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
