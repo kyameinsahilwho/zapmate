@@ -125,5 +125,42 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
             self.fields['username'].read_only = False
 
         return super().to_representation(instance)
+
+class CommentSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    class Meta:
+        model = Comment
+        fields = ['id','username','timecapsule', 'comment', 'publish_date']
+        read_only_fields = ['publish_date']
+    def to_representation(self, instance):
+        if self.context['request'].method == 'GET':
+            self.fields['username'].read_only = False
+
+        return super().to_representation(instance)
     
+class LikeSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    class Meta:
+        model = Like
+        fields = ['id','username','timecapsule', 'publish_date']
+        read_only_fields = ['publish_date']
+    def to_representation(self, instance):
+        if self.context['request'].method == 'GET':
+            self.fields['username'].read_only = False
+
+        return super().to_representation(instance)
+    
+class FollowsSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    follows_username = serializers.CharField(source='follows.username', read_only=True)
+    class Meta:
+        model = Follows
+        fields = ['id','username','follows_username', 'follow_date']
+        read_only_fields = ['follow_date']
+    def to_representation(self, instance):
+        if self.context['request'].method == 'GET':
+            self.fields['username'].read_only = False
+            self.fields['follows_username'].read_only = False
+
+        return super().to_representation(instance)
     

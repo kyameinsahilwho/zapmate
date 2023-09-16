@@ -98,3 +98,66 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
         user_id = self.request.user.id
         serializer.save(user_id=user_id,hashtags=hashtags)
 
+class CommentListCreateView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        timecapsule = self.kwargs['timecapsule']
+        return Comment.objects.filter(timecapsule=timecapsule)
+
+    def perform_create(self, serializer):
+        user_id = self.request.user.id
+        timecapsule = self.kwargs['timecapsule']
+        serializer.save(user_id=user_id, timecapsule=timecapsule)
+    
+class LikeListCreateView(generics.ListCreateAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Like.objects.filter(user_id=user_id)
+
+    def perform_create(self, serializer):
+        user_id = self.request.user.id
+        serializer.save(user_id=user_id)
+
+class LikeRetrieveDestroyView(generics.RetrieveDestroyAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Like.objects.filter(user=user_id)
+
+    def perform_destroy(self, instance):
+        user_id = self.request.user.id
+        if instance.user != user_id:
+            raise PermissionDenied('You do not have permission to delete this like.')
+        instance.delete()
+class FollowsListCreateView(generics.ListCreateAPIView):
+    serializer_class = FollowsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Follows.objects.filter(user_id=user_id)
+
+    def perform_create(self, serializer):
+        user_id = self.request.user.id
+        serializer.save(user_id=user_id)
+
+class FollowsRetrieveDestroyView(generics.RetrieveDestroyAPIView):
+    serializer_class = FollowsSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return Follows.objects.filter(user=user_id)
+
+    def perform_destroy(self, instance):
+        user_id = self.request.user.id
+        if instance.user != user_id:
+            raise PermissionDenied('You do not have permission to delete this follow.')
+        instance.delete()

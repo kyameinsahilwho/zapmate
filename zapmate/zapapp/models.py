@@ -75,3 +75,37 @@ class TimeCapsule(models.Model):
 
     class Meta:
         ordering = ['publish_date']
+
+class Comment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments')
+    timecapsule = models.ForeignKey(TimeCapsule, on_delete=models.CASCADE, related_name='comments')
+    comment = models.TextField()
+    publish_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.content
+
+    class Meta:
+        ordering = ['publish_date']
+
+class Like(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='likes')
+    timecapsule = models.ForeignKey(TimeCapsule, on_delete=models.CASCADE, related_name='likes')
+    publish_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.user.username + ' likes ' + self.timecapsule.title
+
+    class Meta:
+        ordering = ['publish_date']
+
+class Follows(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user')
+    follows = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='follows')
+    follow_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.user.username + ' follows ' + self.follows.username
+
+    class Meta:
+        ordering = ['follow_date']
