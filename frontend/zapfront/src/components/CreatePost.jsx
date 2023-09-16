@@ -66,7 +66,7 @@ export default function CreatePost(props) {
 
       <div className="tt absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] h-fit mx-auto bg-white shadow-xl rounded-lg w-[90%] max-w-[902px]  dark:bg-dark2">
         <ul className=" p-3.5 border-b text-center text-sm font-semibold text-black dark:text-white dark:border-slate-700">
-          <li className="flex justify-between center" >
+          <li className="flex justify-between items-center" >
             <a
               onClick={props.handleCreatePost}
               className=""
@@ -91,7 +91,7 @@ export default function CreatePost(props) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="text-white bg-blue-600 rounded-lg py-1.5 px-5 text-sm m-2.5 uk-animation-slide-right-small"
+              className="text-white bg-blue-600 rounded-lg py-1.5 px-5 text-sm mx-2.5 uk-animation-slide-right-small"
             >
               {" "}
               Share{" "}
