@@ -101,16 +101,18 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
 class CommentListCreateView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        timecapsule = self.kwargs['timecapsule']
-        return Comment.objects.filter(timecapsule=timecapsule)
+    queryset=Comment.objects.all()
 
     def perform_create(self, serializer):
         user_id = self.request.user.id
-        timecapsule = self.kwargs['timecapsule']
-        serializer.save(user_id=user_id, timecapsule=timecapsule)
+        serializer.save(user_id=user_id)
+
+class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
     
+
 class LikeListCreateView(generics.ListCreateAPIView):
     serializer_class = LikeSerializer
     permission_classes = [IsAuthenticated]
@@ -133,7 +135,7 @@ class LikeRetrieveDestroyView(generics.RetrieveDestroyAPIView):
 
     def perform_destroy(self, instance):
         user_id = self.request.user.id
-        if instance.user != user_id:
+        if instance.user_id != user_id:
             raise PermissionDenied('You do not have permission to delete this like.')
         instance.delete()
 class FollowsListCreateView(generics.ListCreateAPIView):
@@ -158,6 +160,6 @@ class FollowsRetrieveDestroyView(generics.RetrieveDestroyAPIView):
 
     def perform_destroy(self, instance):
         user_id = self.request.user.id
-        if instance.user != user_id:
+        if instance.user_id != user_id:
             raise PermissionDenied('You do not have permission to delete this follow.')
         instance.delete()
