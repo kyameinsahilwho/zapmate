@@ -1,4 +1,28 @@
+import { useEffect, useState } from "react";
+
 export default function ProfileCapsuleView(props) {
+  const [comments, setComments] = useState([]);
+  async function getComments() {
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const response = await fetch(
+      `http://localhost:8000/zapapp/comment/?timecapsule_id=${props.item.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+
+    );
+    const data = await response.json();
+    setComments(data);
+  }
+  useEffect(() => { 
+    getComments();
+  }, [props.item]);
   if (!props.selectedPost) {
     return null;
   }
@@ -92,7 +116,7 @@ export default function ProfileCapsuleView(props) {
                       <path d="M20.84 4.22a5.5 5.5 0 0 0-7.78 0L12 5.16l-1.06-.94a5.5 5.5 0 0 0-7.78 7.78L12 21l8.84-8.84a5.5 5.5 0 0 0 0-7.94z" />
                     </svg>
                   </button>
-                  <a href="#">1,300</a>
+                  <a href="#">{props.item.total_likes}</a>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
@@ -100,22 +124,22 @@ export default function ProfileCapsuleView(props) {
                     className="button__ico bg-slate-100 dark:bg-slate-700"
                   >
                     <svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  strokeWidth="2"
-  strokeLinecap="round"
-  strokeLinejoin="round"
-  className={props.className}
->
-  <circle cx="12" cy="12" r="10" />
-  <path d="M7 8H17" />
-  <path d="M7 12H17" />
-  <path d="M7 16H17" />
-</svg>
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={props.className}
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M7 8H17" />
+                      <path d="M7 12H17" />
+                      <path d="M7 16H17" />
+                    </svg>
                   </button>
-                  <span>260</span>
+                  <span>{props.item.total_comments}</span>
                 </div>
                 <button type="button" className="button__ico ml-auto">
                   {" "}
@@ -131,23 +155,27 @@ export default function ProfileCapsuleView(props) {
           <div className="p-5 h-full overflow-y-auto flex-1">
             {/* comment list */}
             <div className="relative text-sm font-medium space-y-5">
-              <div className="flex items-start gap-3 relative">
-                <img
-                  src="assets/images/avatars/avatar-2.jpg"
-                  alt=""
-                  className="w-6 h-6 mt-1 rounded-full"
-                />
-                <div className="flex-1">
-                  <a
-                    href="#"
-                    className="text-black font-medium inline-block dark:text-white"
-                  >
-                    {" "}
-                    Steeve{" "}
-                  </a>
-                  <p className="mt-0.5">What a beautiful, I love it. 😍 </p>
+              {comments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex items-start gap-3 relative"
+                >
+                  <img
+                    src={comment.pfp}
+                    alt=""
+                    className="w-6 h-6 mt-1 rounded-full"
+                  />
+                  <div className="flex-1">
+                    <a
+                      href="#"
+                      className="text-black font-medium inline-block dark:text-white"
+                    >
+                      {comment.username}
+                    </a>
+                    <p className="mt-0.5">{comment.comment}</p>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
           <div className="bg-white p-3 text-sm font-medium flex items-center gap-2">

@@ -110,7 +110,7 @@ export default function Profile() {
                     <div>
                       <p className="font-medium">Followers</p>
                       <h3 className="sm:text-xl sm:font-bold mt-1 text-black dark:text-white text-base font-normal">
-                        8,542
+                        {profileData.totalfollowers}
                       </h3>
                     </div>
                   </div>

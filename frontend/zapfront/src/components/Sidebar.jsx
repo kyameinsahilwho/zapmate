@@ -13,7 +13,7 @@ export default function Sidebar() {
       localStorage.getItem("zapmateAuthTokens")
     ).access;
     const response = await fetch(
-      `http://localhost:8000/zapapp/profile/?fields=username,profile_picture`,
+      `http://localhost:8000/zapapp/profile/?fields=username,profile_picture,totalfollowers`,
       {
         method: "GET",
         headers: {
@@ -926,14 +926,10 @@ export default function Sidebar() {
 
               <div className="mt-3 flex gap-3.5">
                 <div>
-                  {" "}
-                  <a href="profile.html">
-                    {" "}
-                    <strong> 38k </strong>{" "}
+                 <span className="font-bold">{profileData.totalfollowers}</span> 
                     <span className="text-gray-400 dark:text-white/80 ml-1">
-                      Followers{" "}
-                    </span>{" "}
-                  </a>
+                      Followers
+                    </span>
                 </div>
               </div>
             </div>

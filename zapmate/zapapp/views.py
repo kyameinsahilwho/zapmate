@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
 
 from .models import *
 from .serializers import *
@@ -9,8 +10,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .permissions import IsNotSuperuserOrStaff
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-
-
+from django.http import JsonResponse
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -99,9 +99,11 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
         serializer.save(user_id=user_id,hashtags=hashtags)
 
 class CommentListCreateView(generics.ListCreateAPIView):
+    queryset=Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
-    queryset=Comment.objects.all()
+    filterset_fields = ['timecapsule_id']
+    
 
     def perform_create(self, serializer):
         user_id = self.request.user.id
@@ -163,3 +165,11 @@ class FollowsRetrieveDestroyView(generics.RetrieveDestroyAPIView):
         if instance.user_id != user_id:
             raise PermissionDenied('You do not have permission to delete this follow.')
         instance.delete()
+
+class TotalFollowersView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_id = request.user.id
+        total_followers = Follows.objects.filter(follows=user_id).count()
+        return JsonResponse({"totalfollowers": total_followers})

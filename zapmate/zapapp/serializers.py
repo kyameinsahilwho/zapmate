@@ -81,10 +81,11 @@ class CustomUserRefreshSerializer(TokenRefreshSerializer):
 
 class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    totalfollowers = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('bio', 'profile_picture','username')
+        fields = ('bio', 'profile_picture','username','totalfollowers')
 
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
@@ -107,6 +108,9 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     def get_total_capsules(self, obj):
         user = CustomUser.objects.get(id=obj.user_id)
         return TimeCapsule.objects.filter(user=user).count()
+    def get_totalfollowers(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        return Follows.objects.filter(follows=user).count()
 
     
 
@@ -114,29 +118,43 @@ class ProfileSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
 class TimeCapsuleSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    total_likes = serializers.SerializerMethodField()
+    total_comments = serializers.SerializerMethodField()
 
 
     class Meta:
         model = TimeCapsule
-        fields = [ 'id','username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private']
+        fields = [ 'id','username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private','total_likes','total_comments']
         read_only_fields = [ 'publish_date', 'is_available']
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
             self.fields['username'].read_only = False
 
         return super().to_representation(instance)
+    def get_total_likes(self, obj):
+        return Like.objects.filter(timecapsule=obj).count()
+    def get_total_comments(self, obj):
+        return Comment.objects.filter(timecapsule=obj).count()
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    pfp = serializers.SerializerMethodField()
     class Meta:
         model = Comment
-        fields = ['id','username','timecapsule', 'comment', 'publish_date']
+        fields = ['id','username','timecapsule', 'comment', 'publish_date','pfp']
         read_only_fields = ['publish_date']
     def to_representation(self, instance):
         if self.context['request'].method == 'GET':
             self.fields['username'].read_only = False
 
         return super().to_representation(instance)
+    def get_pfp(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        profile = Profile.objects.get(user=user)
+        if profile.profile_picture:
+            return self.context["request"].build_absolute_uri(profile.profile_picture.url)
+        else:
+            return None
     
 class LikeSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
@@ -163,4 +181,5 @@ class FollowsSerializer(serializers.ModelSerializer):
             self.fields['follows_username'].read_only = False
 
         return super().to_representation(instance)
+
     
