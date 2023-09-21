@@ -12,6 +12,7 @@ import Home from "./components/Home";
 import Profile from "./components/Profile";
 import { useContext } from "react";
 import Settings from "./components/Settings";
+import Explore from "./components/Explore";
 import Loader from "./components/Loader";
 function App() {
   const { user,loading } = useContext(AuthContext);
@@ -25,6 +26,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/explore" element={<Explore />} />
         <Route path="/" element={<Home />} />
       </Routes>
       {console.log(user)}

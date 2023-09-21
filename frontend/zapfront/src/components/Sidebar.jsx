@@ -39,6 +39,9 @@ export default function Sidebar() {
   function handlesettings() {
     navigate("/settings");
   }
+  function handleExplore() {
+    navigate("/explore");
+  }
 
   if (loading) {
     return (
@@ -438,7 +441,7 @@ export default function Sidebar() {
             </div>
           </div>
           {/* Explore */}
-          <a href="explore.html" className="max-md:!hidden">
+          <a onClick={handleExplore} className="max-md:!hidden">
             <svg
               id="icon__outline"
               xmlns="http://www.w3.org/2000/svg"

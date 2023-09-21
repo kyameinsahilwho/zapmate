@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+from datetime import datetime, timedelta
 
 from .models import *
 from .serializers import *
@@ -177,5 +178,11 @@ class TotalFollowersView(APIView):
 class ExploreView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TimeCapsuleSerializer
-    queryset = TimeCapsule.objects.filter(is_private=False)
+    queryset = TimeCapsule.objects.filter(is_private=False,available_date__lte=timezone.now()+ timedelta(hours=5, minutes=30))
     search_fields = ['hashtags','content','title']
+
+class SearchView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomUserSerializer
+    queryset = CustomUser.objects.all()
+    search_fields = ['username','first_name','last_name']

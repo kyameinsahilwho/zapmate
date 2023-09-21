@@ -9,7 +9,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     new_password = serializers.CharField(write_only=True, required=False)
     class Meta:
         model = CustomUser
-        fields = ('id', 'email', 'first_name', 'last_name', 'date_joined', 'is_active', 'is_staff','old_password','new_password')
+        fields = ('id', 'email', 'first_name', 'last_name','username', 'date_joined', 'is_active', 'is_staff','old_password','new_password')
         read_only_fields = ('id', 'date_joined', 'is_staff')
 
     def create(self, validated_data):

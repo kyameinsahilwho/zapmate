@@ -17,6 +17,7 @@ urlpatterns = [
     path('follows/<int:pk>/', FollowsRetrieveDestroyView.as_view(), name='follows-retrieve-update-destroy'),
     path('totalfollowers/',TotalFollowersView.as_view(),name='total-followers'),
     path('explore/',ExploreView.as_view(),name='explore'),
+    path('search/',SearchView.as_view(),name='search'),
     
 
     
