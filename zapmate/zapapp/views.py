@@ -173,3 +173,9 @@ class TotalFollowersView(APIView):
         user_id = request.user.id
         total_followers = Follows.objects.filter(follows=user_id).count()
         return JsonResponse({"totalfollowers": total_followers})
+    
+class ExploreView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TimeCapsuleSerializer
+    queryset = TimeCapsule.objects.filter(is_private=False)
+    search_fields = ['hashtags','content','title']

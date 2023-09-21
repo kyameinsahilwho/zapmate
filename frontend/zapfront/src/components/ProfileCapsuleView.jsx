@@ -28,14 +28,14 @@ export default function ProfileCapsuleView(props) {
   }
   return (
     <div className="lg:p-20 max-lg:!items-start w-full h-full z-[9999] top-[50%] left-[50%] absolute flex justify-center items-center translate-x-[-50%] translate-y-[-50%]">
-      <div className="uk-modal-dialog tt relative mx-auto overflow-hidden shadow-xl rounded-lg lg:flex items-center ax-w-[86rem] w-full lg:h-[80vh]">
+      <div className="uk-modal-dialog tt relative  max-w-[900px] mx-auto overflow-hidden shadow-xl rounded-lg lg:flex items-center ax-w-[86rem] w-full lg:h-[80vh]">
         {/* image previewer */}
         <div className="lg:h-full lg:w-[calc(100vw-100px)] w-full h-96 flex justify-center items-center relative">
           <div className="relative z-10 w-full h-full">
             <img
               src={props.item.image}
               alt=""
-              className="object-cover absolute"
+              className="object-cover absolute h-full w-full "
             />
           </div>
           {/* close button */}
@@ -152,7 +152,7 @@ export default function ProfileCapsuleView(props) {
               </div>
             </div>
           </div>
-          <div className="p-5 h-full overflow-y-auto flex-1">
+          <div className="p-5 h-full max-h-[180px] lg:max-h-full overflow-y-auto flex-1">
             {/* comment list */}
             <div className="relative text-sm font-medium space-y-5">
               {comments.map((comment) => (

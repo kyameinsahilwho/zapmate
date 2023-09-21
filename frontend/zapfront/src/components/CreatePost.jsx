@@ -63,9 +63,9 @@ export default function CreatePost(props) {
   return (
     <>
       <ToastContainer />
-      <div className="lg:p-20 max-lg:!items-start w-full h-full z-[100] top-[50%] left-[50%] absolute flex justify-center items-center translate-x-[-50%] translate-y-[-50%] backdrop-blur-sm"></div>
+      <div className="lg:p-20 max-lg:!items-start w-full h-full z-[100] top-[50%] left-[50%] fixed flex justify-center items-center translate-x-[-50%] translate-y-[-50%] backdrop-blur-sm"></div>
 
-      <div className="tt absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] h-fit mx-auto bg-white shadow-xl rounded-lg w-[90%] max-w-[902px]  dark:bg-dark2">
+      <div className="tt fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] h-fit mx-auto bg-white shadow-xl rounded-lg w-[90%] max-w-[902px]  dark:bg-dark2">
         <ul className=" p-3.5 border-b text-center text-sm font-semibold text-black dark:text-white dark:border-slate-700">
           <li className="flex justify-between items-center" >
             <a
