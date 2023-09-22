@@ -58,6 +58,7 @@ export default function Profile() {
   const handleClosePostView = () => {
     setSelectedPost(null);
   };
+
   return (
     <>
       <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
@@ -114,89 +115,6 @@ export default function Profile() {
                       </h3>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <button
-                      type="submit"
-                      className="button text-gray-600 bg-slate-200 hidden"
-                    >
-                      Follow
-                    </button>
-                    <button
-                      type="button"
-                      className="button bg-blue-100 text-blue-600 border border-blue-200"
-                    >
-                      Unfallow
-                    </button>
-                    <button
-                      type="submit"
-                      className="button bg-blue-600 text-white"
-                    >
-                      Message
-                    </button>
-                    <div>
-                      <button
-                        type="submit"
-                        className="rounded-lg bg-slate-200/60 flex px-2 py-1.5 dark:bg-dark2"
-                      >
-                        {" "}
-                        <ion-icon
-                          className="text-xl"
-                          name="ellipsis-horizontal"
-                        />
-                      </button>
-                      <div
-                        className="w-[240px]"
-                        uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click;offset:10"
-                      >
-                        <nav>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="pricetags-outline"
-                            />{" "}
-                            Unfollow{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="time-outline"
-                            />{" "}
-                            Mute story{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="flag-outline"
-                            />{" "}
-                            Report{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="share-outline"
-                            />{" "}
-                            Share profile{" "}
-                          </a>
-                          <hr />
-                          <a
-                            href="#"
-                            className="text-red-400 hover:!bg-red-50 dark:hover:!bg-red-500/50"
-                          >
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="stop-circle-outline"
-                            />{" "}
-                            Block{" "}
-                          </a>
-                        </nav>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -213,42 +131,54 @@ export default function Profile() {
               className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-3 mt-6"
               uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100"
             >
-              {capsuleData.map((item) => (
-                <a onClick={() => handlePostView(item.id)} key={item.id}>
-
-                  <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100">
-                    <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
-                      <div className="relative w-full lg:h-60 h-full aspect-[3/3]">
-                        <img
-                          src={item.image}
-                          alt=""
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                      <div className="absolute inset-0 bg-white/5 backdrop-blur-sm uk-transition-fade">
-                        <div className="flex items-center justify-center gap-4 text-white w-full h-full">
-                          <div className="flex items-center gap-2">
-                            {" "}
-                            <ion-icon
-                              className="text-2xl"
-                              name="heart-circle"
-                            />{" "}
-                            {item.likes}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {" "}
-                            <ion-icon
-                              className="text-2xl"
-                              name="chatbubble-ellipses"
-                            />{" "}
-                            {item.comments}
+              {capsuleData.length === 0 ? (
+                <>
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                </>
+              ) : (
+                capsuleData.map((item) => (
+                  <a onClick={() => handlePostView(item.id)} key={item.id}>
+                    <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100">
+                      <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
+                        <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md">
+                          <img
+                            src={item.image}
+                            alt=""
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm uk-transition-fade shadow-md">
+                          <div className="flex items-center justify-center gap-4 text-white w-full h-full shadow-md">
+                            <div className="flex items-center gap-2">
+                              {" "}
+                              <ion-icon
+                                className="text-2xl"
+                                name="heart-circle"
+                              />{" "}
+                              {item.likes}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {" "}
+                              <ion-icon
+                                className="text-2xl"
+                                name="chatbubble-ellipses"
+                              />{" "}
+                              {item.comments}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              ))}
+                  </a>
+                ))
+              )}
             </div>
             {selectedPost && (
               <div>

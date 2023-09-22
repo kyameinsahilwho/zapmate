@@ -51,8 +51,7 @@ export default function Explore() {
       <div className="main__inner">
         {/* search box */}
         <div
-          className="z-10 p-5 max-lg:!top-10 lg:rounded-bl-2xl lg:rounded-br-2xl shadow-md bg-slate-100/60 backdrop-blur-3xl dark:bg-slate-800/60"
-          uk-sticky="cls-inactive: invisible h-0; start: 1; animation: uk-animation-slide-top"
+          className="z-[100] border-none outline-none shadow-none sticky md:top-0 right-0 left-0 max-lg:!top-[60px] lg:rounded-2xl bg-slate-100/60 backdrop-blur-3xl dark:bg-slate-800/60"
         >
           <div className="relative">
             <svg
@@ -72,14 +71,14 @@ export default function Explore() {
             <input
               type="text"
               placeholder="Search"
-              className="!bg-white/20 w-full !pl-10 !py-2 border !border-gray-300 dark:!border-slate-500"
+              className="!bg-white/20 h-full w-full !pl-10 !py-2 shadow-none outline-none border-none"
               value={searchTerm}
               onChange={handleSearch}
             />
           </div>
         </div>
         <div
-          className="gallery -mt-16"
+          className="gallery mt-4"
           uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100"
         >
           {posts && posts.map((post) => (
@@ -91,9 +90,9 @@ export default function Explore() {
               </a>
             </div>
           ))}
-          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse" />
-          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse" />
-          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse" />
+          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-lg" />
+          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-lg" />
+          <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-lg" />
         </div>
       </div>
     </main>

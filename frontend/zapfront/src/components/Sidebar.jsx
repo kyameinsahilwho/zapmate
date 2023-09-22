@@ -4,6 +4,8 @@ import AuthContext from "../context/Auth";
 import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import CreatePost from "./CreatePost";
+import Search from "./Search";
+import icon from '../assets/images/LinkedIn cover - 1.png'
 export default function Sidebar() {
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
@@ -75,28 +77,18 @@ export default function Sidebar() {
         className="flex sside md:flex-col justify-between md:h-screen md:p-2 p-1 transition-all duration-500 bg-white shadow dark:bg-dark2 2xl:w-72 xl:w-60 max-xl:w-[73px] max-md:w-screen max-md:border-t max-md:dark:border-slate-700"
       >
         {/* logo */}
-        <div className="flex h-20 px-2 max-md:fixed max-md:top-0 max-md:w-full max-md:bg-white/80 max-md:left-0 max-md:px-4 max-md:h-14 max-md:shadow-sm max-md:dark:bg-slate-900/80 backdrop-blur-xl">
+        <div className="flex h-20  max-md:fixed max-md:top-0 max-md:w-full max-md:bg-white/80 max-md:left-0 max-md:px-4 max-md:h-14 max-md:shadow-sm max-md:dark:bg-slate-900/80 backdrop-blur-xl">
           <a href="home.html" id="logo" className="flex items-center gap-3">
             {/* logo icon */}
-            <img
-              id="logo__icon"
-              src="assets/images/logo-icon.png"
-              alt=""
-              className="md:w-8 hidden text-2xl max-xl:!block max-md:!hidden shrink-0 uk-animation-scale-up"
-            />
+            
             {/* text logo */}
             <img
               id="logo__text"
-              src="assets/images/logo.svg"
+              src={icon}
               alt=""
               className="w-full h-6 ml-1 max-xl:hidden max-md:block dark:!hidden"
             />
-            <img
-              id="logo__text"
-              src="assets/images/logo-dark.svg"
-              alt=""
-              className="w-full h-6 ml-1 !hidden max-xl:!hidden max-md:block dark:max-md:!block dark:!block"
-            />
+            
           </a>
         </div>
         {/* nav */}
@@ -133,7 +125,7 @@ export default function Sidebar() {
             <span className="max-xl:hidden"> Home </span>
           </a>
           {/* Search */}
-          <a href="#!">
+          <a>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -149,297 +141,8 @@ export default function Sidebar() {
             </svg>
             <span className="max-xl:hidden"> Search </span>
           </a>
-          <div
-            className="sm:w-[397px] w-full bg-white shadow-lg md:!left-[73px] hidden !left-0 dark:bg-dark2 dark:border1 max-md:bottom-[57px]"
-            uk-drop="pos: left-center;animate-out: true; animation: uk-animation-slide-left-medium; mode:click; offset: 9"
-          >
-            <div className="md:h-screen overflow-y-auto h-[calc(100vh-120px)]">
-              {/* header */}
-              <div className="px-5 py-4 space-y-5 border-b border-gray-100 dark:border-slate-700">
-                <h3 className="md:text-xl text-lg font-medium mt-3 text-black dark:text-white">
-                  Search
-                </h3>
-                <div className="relative -mx-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-5 h-5 absolute left-3 bottom-1/2 translate-y-1/2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="bg-transparen w-full !pl-10 !py-2 !rounded-lg"
-                  />
-                </div>
-              </div>
-              {/* contents list */}
-              <div className="p-2 space-y-2 dark:text-white">
-                <div className="flex items-center justify-between py-2.5 px-3 font-semibold">
-                  <h4>Recent</h4>
-                  <button type="button" className="text-blue-500 text-sm">
-                    Clear all
-                  </button>
-                </div>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-2.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Johnson smith{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Suggested For You{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-5.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      James Lewis{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Followed By Johnson{" "}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                  >
-                    {" "}
-                    Follow{" "}
-                  </button>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="border border-gray-200 p-2.5 rounded-full w-9 h-9 fill-black"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
-                    />
-                  </svg>
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      artificial intelligence
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      13,352K post{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-3.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Monroe Parker{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Parker . following{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-7.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Johnson smith{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Suggested For You{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-4.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      James Lewis{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Followed By Johnson{" "}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                  >
-                    {" "}
-                    Follow{" "}
-                  </button>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="border border-gray-200 p-2.5 rounded-full w-9 h-9 fill-black"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
-                    />
-                  </svg>
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Ui Designers{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      9,362K post{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="border border-gray-200 p-2.5 rounded-full w-9 h-9 fill-black"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
-                    />
-                  </svg>
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Affiliate marketing
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      4,248K post{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-2.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="fldex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      Johnson smith{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Suggested For You{" "}
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="profile.html"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
-                >
-                  <img
-                    src="assets/images/avatars/avatar-5.jpg"
-                    alt=""
-                    className="bg-gray-200 rounded-full w-10 h-10"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-black dark:text-white">
-                      {" "}
-                      James Lewis{" "}
-                    </h4>
-                    <div className="text-xs text-gray-500 font-normal mt-0.5 dark:text-white-80">
-                      {" "}
-                      Followed By Johnson{" "}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                  >
-                    {" "}
-                    Follow{" "}
-                  </button>
-                </a>
-              </div>
-            </div>
-          </div>
+          <Search />
+          
           {/* Explore */}
           <a onClick={handleExplore} className="max-md:!hidden">
             <svg
@@ -469,7 +172,6 @@ export default function Sidebar() {
           </a>
           {/* Notification */}
           <a
-            href="#!"
             className="max-md:!fixed max-md:top-2 max-md:right-14 relative"
           >
             <svg
