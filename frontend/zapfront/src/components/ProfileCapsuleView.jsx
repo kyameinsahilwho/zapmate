@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 
 export default function ProfileCapsuleView(props) {
+  console.log(props.item)
   const [comments, setComments] = useState([]);
+  useEffect(() => {
+    getComments();
+  }, []);
+  
   async function getComments() {
-    const accessToken = JSON.parse(
-      localStorage.getItem("zapmateAuthTokens")
-    ).access;
-    const response = await fetch(
-      `http://localhost:8000/zapapp/comment/?timecapsule_id=${props.item.id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const accessToken = JSON.parse(localStorage.getItem("zapmateAuthTokens")).access;
+    const response = await fetch(`http://localhost:8000/zapapp/comment/?timecapsule_id=${props.item.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     const data = await response.json();
     setComments(data);
   }
-  useEffect(() => {
-    getComments();
-  }, [props.item]);
   if (!props.selectedPost) {
     return null;
   }

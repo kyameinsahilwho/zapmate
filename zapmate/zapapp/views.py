@@ -5,7 +5,9 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from datetime import datetime, timedelta
 from django.db.models.functions import Random
-
+from django.http import Http404
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -90,10 +92,19 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
     serializer_class = TimeCapsuleSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        user_id = self.request.user.id
-        return TimeCapsule.objects.filter(user_id=user_id)
-
+    def get(self, request, *args, **kwargs):
+        user_id = request.user.id
+        now = timezone.now() + timedelta(hours=5, minutes=30)
+        posted_capsules = TimeCapsule.objects.filter(user_id=user_id, available_date__lte=now)
+        upcoming_capsules = TimeCapsule.objects.filter(user_id=user_id, available_date__gt=now)
+        posted_serializer = TimeCapsuleSerializer(posted_capsules, many=True,context={'request': request})
+        upcoming_serializer = TimeCapsuleSerializer(upcoming_capsules, many=True,context={'request': request})
+        data = {
+            'posted': posted_serializer.data,
+            'upcoming': upcoming_serializer.data
+        }
+        print(data)
+        return Response(data)
     def perform_create(self, serializer):
         hashtags=self.request.POST.get('hashtags')
         hashtags = hashtags.split(',')
@@ -187,3 +198,44 @@ class SearchView(generics.ListAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     search_fields = ['user__username','user__first_name','user__last_name']
+
+class UserView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+
+    def get_object(self):
+        try:
+            return Profile.objects.get(user__username=self.request.query_params.get('username'))
+        except Profile.DoesNotExist:
+            raise Http404("Profile does not exist")
+        
+class UserTimeCapsuleView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TimeCapsuleSerializer
+
+    def get_queryset(self):
+        try:
+            return TimeCapsule.objects.filter(user__username=self.request.query_params.get('username'),is_private=False,available_date__lte=timezone.now()+ timedelta(hours=5, minutes=30)).order_by('-publish_date')
+        except TimeCapsule.DoesNotExist:
+            raise Http404("TimeCapsule does not exist")
+        
+class UserFollows(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_id = request.user.id
+        userviewing = CustomUser.objects.get(username=request.GET.get('username'))
+        if Follows.objects.filter(user=user_id,follows=userviewing).exists():
+            return JsonResponse({"follows": True})
+        else:
+            return JsonResponse({"follows": False})
+    def post(self,request):
+        user_id = request.user.id
+        userviewing = CustomUser.objects.get(username=request.GET.get('username'))
+        Follows.objects.create(user_id=user_id,follows=userviewing)
+        return JsonResponse({"follows": True})
+    def delete(self,request):
+        user_id = request.user.id
+        userviewing = CustomUser.objects.get(username=request.GET.get('username'))
+        Follows.objects.filter(user=user_id,follows=userviewing).delete()
+        return JsonResponse({"follows": False})

@@ -18,8 +18,8 @@ urlpatterns = [
     path('totalfollowers/',TotalFollowersView.as_view(),name='total-followers'),
     path('explore/',ExploreView.as_view(),name='explore'),
     path('search/',SearchView.as_view(),name='search'),
-    
-
-    
+    path('user/',UserView.as_view(),name='user'),
+    path('usertimecapsule/',UserTimeCapsuleView.as_view(),name='user-timecapsule'),
+    path('userfollows/',UserFollows.as_view(),name='user-follows'),
 
 ]

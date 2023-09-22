@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +40,7 @@ export default function Search() {
         setSearchTerm(event.target.value);
         setSearching(true);
     };
+  const navigate = useNavigate();
   return (
     <div
       className="sm:w-[397px] w-full bg-white shadow-lg md:!left-[73px]  !left-0 dark:bg-dark2 dark:border1 max-md:bottom-[57px]"
@@ -132,8 +134,8 @@ export default function Search() {
           )}
           {users &&
             users.map((user) => (
+              <Link to={`/user/${user.username}`}>
               <a
-                href="profile.html"
                 className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
                 key={user.id}
               >
@@ -151,6 +153,7 @@ export default function Search() {
                   </div>
                 </div>
               </a>
+              </Link>
             ))}
         </div>
       </div>

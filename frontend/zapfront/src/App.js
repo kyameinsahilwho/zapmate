@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import AuthContext from "./context/Auth";
 import Sidebar from "./components/Sidebar";
+import User from "./components/User";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import { useContext } from "react";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/user/:username" element={<User />} />
         <Route path="/" element={<Home />} />
       </Routes>
       {console.log(user)}

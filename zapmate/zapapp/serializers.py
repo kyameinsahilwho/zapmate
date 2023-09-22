@@ -126,15 +126,12 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
         model = TimeCapsule
         fields = [ 'id','username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private','total_likes','total_comments']
         read_only_fields = [ 'publish_date', 'is_available']
-    def to_representation(self, instance):
-        if self.context['request'].method == 'GET':
-            self.fields['username'].read_only = False
 
-        return super().to_representation(instance)
     def get_total_likes(self, obj):
         return Like.objects.filter(timecapsule=obj).count()
     def get_total_comments(self, obj):
         return Comment.objects.filter(timecapsule=obj).count()
+    
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
