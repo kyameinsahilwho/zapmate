@@ -14,7 +14,7 @@ export default function User() {
   const [selectedPost, setSelectedPost] = useState(null);
   const followButtonClass = !follows
   ? "rounded-lg bg-blue-600 text-white px-4 py-1.5 hover:bg-blue-700 dark:bg-dark2 dark:hover:bg-dark3 dark:text-white"
-  : "rounded-lg bg-white text-blue-600 px-4 py-1.5 hover:bg-gray-100 dark:bg-dark3 dark:hover:bg-dark2 dark:text-black";
+  : "rounded-lg bg-white text-blue-600 border px-4 py-1.5 hover:bg-gray-100 dark:bg-dark3 dark:hover:bg-dark2 dark:text-black";
   async function fetchData() {
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
