@@ -44,6 +44,9 @@ export default function Sidebar() {
   function handleExplore() {
     navigate("/explore");
   }
+  function handleHome() {
+    navigate("/");
+  }
 
   if (loading) {
     return (
@@ -94,7 +97,7 @@ export default function Sidebar() {
         {/* nav */}
         <nav className="flex-1 max-md:flex max-md:justify-around md:space-y-2">
           {/* Home */}
-          <a href="home.html">
+          <a onClick={handleHome}>
             <svg
               id="icon__outline"
               xmlns="http://www.w3.org/2000/svg"

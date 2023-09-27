@@ -21,5 +21,7 @@ urlpatterns = [
     path('user/',UserView.as_view(),name='user'),
     path('usertimecapsule/',UserTimeCapsuleView.as_view(),name='user-timecapsule'),
     path('userfollows/',UserFollows.as_view(),name='user-follows'),
+    path('home/',HomeView.as_view(),name='home'),
+    path('homehastags/',HomeHashtagsView.as_view(),name='home-hashtags'),
 
 ]

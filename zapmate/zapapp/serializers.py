@@ -178,5 +178,33 @@ class FollowsSerializer(serializers.ModelSerializer):
             self.fields['follows_username'].read_only = False
 
         return super().to_representation(instance)
+    
+class HomeCapsuleSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    total_likes = serializers.SerializerMethodField()
+    total_comments = serializers.SerializerMethodField()
+    pfp = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TimeCapsule
+        fields = [ 'id','username','title', 'content', 'publish_date', 'available_date', 'image', 'is_available','hashtags','is_private','total_likes','total_comments','pfp','comments']
+        read_only_fields = [ 'publish_date', 'is_available']
+
+    def get_total_likes(self, obj):
+        return Like.objects.filter(timecapsule=obj).count()
+    def get_total_comments(self, obj):
+        return Comment.objects.filter(timecapsule=obj).count()
+    def get_pfp(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        profile = Profile.objects.get(user=user)
+        if profile.profile_picture:
+            return self.context["request"].build_absolute_uri(profile.profile_picture.url)
+        else:
+            return None
+    def get_comments(self, obj):
+        comments = Comment.objects.filter(timecapsule=obj)
+        serializer = CommentSerializer(comments, many=True, context={'request': self.context.get('request')})
+        return serializer.data
 
     

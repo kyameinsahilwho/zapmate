@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from datetime import datetime, timedelta
+from django.db.models import Count
+import random
 from django.db.models.functions import Random
 from django.http import Http404
 from rest_framework.response import Response
@@ -239,3 +241,32 @@ class UserFollows(APIView):
         userviewing = CustomUser.objects.get(username=request.GET.get('username'))
         Follows.objects.filter(user=user_id,follows=userviewing).delete()
         return JsonResponse({"follows": False})
+    
+class HomeView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = HomeCapsuleSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        follows = Follows.objects.filter(user=user_id)
+        follows_list = []
+        for follow in follows:
+            follows_list.append(follow.follows)
+        return TimeCapsule.objects.filter(user__in=follows_list,is_private=False,available_date__lte=timezone.now()+ timedelta(hours=5, minutes=30)).order_by('-publish_date')
+    
+class HomeHashtagsView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        hashtags = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).values_list('hashtags', flat=True)
+        hashtags_list = []
+        for capsule_hashtags in hashtags:
+            for hashtag in capsule_hashtags:
+                if hashtag not in hashtags_list:
+                    hashtags_list.append(hashtag)
+        hashtags_list_with_count = []
+        for hashtag in hashtags_list:
+            total_count = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30), hashtags__contains=[hashtag]).count()
+            hashtags_list_with_count.append({'name': hashtag, 'total': total_count})
+        random.shuffle(hashtags_list_with_count)
+        return JsonResponse({"hashtags": hashtags_list_with_count[:5]})
