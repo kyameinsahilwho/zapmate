@@ -5,10 +5,11 @@ import { Link } from "react-router-dom";
 import Loader from "./Loader";
 import CreatePost from "./CreatePost";
 import Search from "./Search";
+import { ProfileContext } from "../context/Profile";
 import icon from '../assets/images/LinkedIn cover - 1.png'
 export default function Sidebar() {
   const [loading, setLoading] = useState(true);
-  const [profileData, setProfileData] = useState(null);
+  const {profileData,setProfileData} = useContext(ProfileContext);
   const [createPost, setCreatePost] = useState(false);
   async function fetchData() {
     const accessToken = JSON.parse(

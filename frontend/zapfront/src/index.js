@@ -5,11 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './context/Auth';
 import {BrowserRouter} from 'react-router-dom';
+import { ProfileProvider } from './context/Profile';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
     <AuthProvider>
+    <ProfileProvider>
     <App />
+    </ProfileProvider>
     </AuthProvider>
     </BrowserRouter>  
 );

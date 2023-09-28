@@ -1,10 +1,36 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ProfileContext } from "../context/Profile";
 export default function Home() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hashtags, setHashtags] = useState([]);
+  const { profileData, setProfileData } = useContext(ProfileContext);
+  const [comment, setComment] = useState({});
+  const [follows, setFollows] = useState(false);
+  const handleFollow = async (username) => {
+    
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const method = follows ? "DELETE" : "POST";
+    const response = await fetch(
+      `http://localhost:8000/zapapp/userfollows/?username=${username}`,
+      {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const data = await response.json();
+    fetchHastags();
+    fetchData();
+  };
+  const [suggestedPeople, setSuggestedPeople] = useState([]);
   async function fetchData() {
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
@@ -34,7 +60,26 @@ export default function Home() {
     });
     const data = await response.json();
     setHashtags(data.hashtags);
+    setSuggestedPeople(data.suggested_people);
   }
+  const handleComment = async () => {
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const response = await fetch(`http://localhost:8000/zapapp/comment/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(comment),
+    });
+    const data = await response.json();
+    console.log(data);
+    setComment({});
+    fetchData();
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchData();
@@ -115,7 +160,10 @@ export default function Home() {
                 className="bg-white rounded-xl shadow-sm text-sm font-medium border1 dark:bg-dark2"
               >
                 <div className="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-                  <a onClick={() => navigate(`/user/${post.username}`)}>
+                  <a
+                    className="hover:cursor-pointer"
+                    onClick={() => navigate(`/user/${post.username}`)}
+                  >
                     {" "}
                     <img
                       src={post.pfp}
@@ -124,7 +172,10 @@ export default function Home() {
                     />{" "}
                   </a>
                   <div className="flex-1">
-                    <a onClick={() => navigate(`/user/${post.username}`)}>
+                    <a
+                      className="hover:cursor-pointer"
+                      onClick={() => navigate(`/user/${post.username}`)}
+                    >
                       {" "}
                       <h4 className="text-black dark:text-white">
                         {" "}
@@ -203,7 +254,7 @@ export default function Home() {
                             onClick={() =>
                               navigate(`/user/${comment.username}`)
                             }
-                            className="text-black font-medium inline-block dark:text-white"
+                            className="text-black font-medium inline-block dark:text-white hover:cursor-pointer "
                           >
                             {" "}
                             {comment.username}{" "}
@@ -227,7 +278,7 @@ export default function Home() {
                 {/* add comment */}
                 <div className="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1 dark:border-slate-700/40">
                   <img
-                    src="assets/images/avatars/avatar-7.jpg"
+                    src={profileData.profile_picture}
                     alt=""
                     className="w-6 h-6 rounded-full"
                   />
@@ -237,11 +288,13 @@ export default function Home() {
                       rows={1}
                       className="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"
                       defaultValue={""}
+                      onChange={(e) => setComment({ comment: e.target.value,timecapsule:post.id })}
                     />
                   </div>
                   <button
                     type="submit"
                     className="text-sm rounded-full py-1.5 px-3.5 bg-secondery"
+                    onClick={handleComment}
                   >
                     {" "}
                     Comment
@@ -259,183 +312,88 @@ export default function Home() {
               {/* peaple you might know */}
               <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
                 <div className="flex justify-between text-black dark:text-white">
-                  <h3 className="font-bold text-base">
-                    {" "}
-                    Peaple You might know{" "}
-                  </h3>
+                  <h3 className="font-bold text-base"> Suggested People </h3>
                   <button type="button">
                     {" "}
                     <ion-icon name="sync-outline" className="text-xl" />{" "}
                   </button>
                 </div>
                 <div className="space-y-4 capitalize text-xs font-normal mt-5 mb-2 text-gray-500 dark:text-white/80">
-                  <div className="flex items-center gap-3">
-                    <a href="profile.html">
-                      <img
-                        src="assets/images/avatars/avatar-7.jpg"
-                        alt=""
-                        className="bg-gray-200 rounded-full w-10 h-10"
-                      />
-                    </a>
-                    <div className="flex-1">
-                      <a href="profile.html">
-                        <h4 className="font-semibold text-sm text-black dark:text-white">
-                          {" "}
-                          Johnson smith
-                        </h4>
+                  {suggestedPeople.map((person) => (
+                    <div className="flex items-center gap-3" key={person.id}>
+                      <a
+                        className="hover:cursor-pointer"
+                        onClick={() => navigate(`user/${person.username}`)}
+                      >
+                        <img
+                          src={person.pfp}
+                          alt="pfp"
+                          className="bg-gray-200 rounded-full w-10 h-10"
+                        />
                       </a>
-                      <div className="mt-0.5"> Suggested For You </div>
+                      <div className="flex-1">
+                        <a
+                          className="hover:cursor-pointer"
+                          onClick={() => navigate(`user/${person.username}`)}
+                        >
+                          <h4 className="font-semibold text-sm text-black dark:text-white">
+                            {person.username}
+                          </h4>
+                        </a>
+                        <div className="mt-0.5"> Suggested For You </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
+                        onClick={()=>handleFollow(person.username)}
+                      >
+                        {" "}
+                        Follow{" "}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                    >
-                      {" "}
-                      Follow{" "}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <a href="profile.html">
-                      <img
-                        src="assets/images/avatars/avatar-5.jpg"
-                        alt=""
-                        className="bg-gray-200 rounded-full w-10 h-10"
-                      />
-                    </a>
-                    <div className="flex-1">
-                      <a href="profile.html">
-                        <h4 className="font-semibold text-sm text-black dark:text-white">
-                          {" "}
-                          James Lewis
-                        </h4>
-                      </a>
-                      <div className="mt-0.5"> Followed by Johnson </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                    >
-                      {" "}
-                      Follow{" "}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <a href="profile.html">
-                      <img
-                        src="assets/images/avatars/avatar-2.jpg"
-                        alt=""
-                        className="bg-gray-200 rounded-full w-10 h-10"
-                      />
-                    </a>
-                    <div className="flex-1">
-                      <a href="profile.html">
-                        <h4 className="font-semibold text-sm text-black dark:text-white">
-                          {" "}
-                          John Michael
-                        </h4>
-                      </a>
-                      <div className="mt-0.5"> Followed by Monroe</div>
-                    </div>
-                    <button
-                      type="button"
-                      className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                    >
-                      {" "}
-                      Follow{" "}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <a href="profile.html">
-                      <img
-                        src="assets/images/avatars/avatar-3.jpg"
-                        alt=""
-                        className="bg-gray-200 rounded-full w-10 h-10"
-                      />
-                    </a>
-                    <div className="flex-1">
-                      <a href="profile.html">
-                        <h4 className="font-semibold text-sm text-black dark:text-white">
-                          {" "}
-                          Monroe Parker
-                        </h4>
-                      </a>
-                      <div className="mt-0.5"> Suggested For You </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                    >
-                      {" "}
-                      Follow{" "}
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <a href="profile.html">
-                      <img
-                        src="assets/images/avatars/avatar-4.jpg"
-                        alt=""
-                        className="bg-gray-200 rounded-full w-10 h-10"
-                      />
-                    </a>
-                    <div className="flex-1">
-                      <a href="profile.html">
-                        <h4 className="font-semibold text-sm text-black dark:text-white">
-                          {" "}
-                          Martin Gray
-                        </h4>
-                      </a>
-                      <div className="mt-0.5"> Suggested For You </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                    >
-                      {" "}
-                      Follow{" "}
-                    </button>
-                  </div>
+                  ))}
                 </div>
               </div>
               {/* Trends */}
-              { hashtags.length !== 0 && (
-              <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
-                <div className="flex justify-between text-black dark:text-white">
-                  <h3 className="font-bold text-base"> Trends for you </h3>
-                  <button type="button">
-                    {" "}
-                    <ion-icon name="sync-outline" className="text-xl" />{" "}
-                  </button>
-                </div>
-                <div className="space-y-3.5 capitalize text-xs font-normal mt-5 mb-2 text-gray-600 dark:text-white/80">
-                  {hashtags.map((hashtag) => (
-                    <a href={`/hashtags/${hashtag.name}`} key={hashtag.name}>
-                      <div className="flex items-center gap-3 p">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-5 h-5 -mt-2"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
-                          />
-                        </svg>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-black dark:text-white text-sm">
-                            {hashtag.name}
-                          </h4>
-                          <div className="mt-0.5">{hashtag.total} posts</div>
+              {hashtags.length !== 0 && (
+                <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
+                  <div className="flex justify-between text-black dark:text-white">
+                    <h3 className="font-bold text-base"> Trends for you </h3>
+                    <button type="button">
+                      {" "}
+                      <ion-icon name="sync-outline" className="text-xl" />{" "}
+                    </button>
+                  </div>
+                  <div className="space-y-3.5 capitalize text-xs font-normal mt-5 mb-2 text-gray-600 dark:text-white/80">
+                    {hashtags.map((hashtag) => (
+                      <a href={`/hashtags/${hashtag.name}`} key={hashtag.name}>
+                        <div className="flex items-center gap-3 p">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="w-5 h-5 -mt-2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
+                            />
+                          </svg>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-black dark:text-white text-sm">
+                              {hashtag.name}
+                            </h4>
+                            <div className="mt-0.5">{hashtag.total} posts</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  ))}
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>)
-}
+              )}
             </div>
           </div>
         </div>

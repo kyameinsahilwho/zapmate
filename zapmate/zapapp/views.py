@@ -269,4 +269,12 @@ class HomeHashtagsView(generics.ListAPIView):
             total_count = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30), hashtags__contains=[hashtag]).count()
             hashtags_list_with_count.append({'name': hashtag, 'total': total_count})
         random.shuffle(hashtags_list_with_count)
-        return JsonResponse({"hashtags": hashtags_list_with_count[:5]})
+        follows_list=Follows.objects.filter(user=request.user.id).values_list('follows',flat=True)
+        suggested_people = CustomUser.objects.exclude(id=request.user.id).exclude(id__in=follows_list).order_by('?')[:5]
+        print(suggested_people)
+        suggested_people_list = []
+        for person in suggested_people:
+            profile=Profile.objects.get(user_id=person.id)
+            print(profile)
+            suggested_people_list.append({'username': person.username,'pfp':request.build_absolute_uri(profile.profile_picture.url) if profile.profile_picture else ""})
+        return JsonResponse({"hashtags": hashtags_list_with_count[:5], "suggested_people": suggested_people_list})

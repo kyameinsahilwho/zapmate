@@ -11,7 +11,7 @@ import Sidebar from "./components/Sidebar";
 import User from "./components/User";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import { useContext } from "react";
+import {createContext, useContext } from "react";
 import Settings from "./components/Settings";
 import Explore from "./components/Explore";
 import Loader from "./components/Loader";
