@@ -96,10 +96,10 @@ WSGI_APPLICATION = 'zapmate.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'fpvurQgGUmi6lpS0',
-        'HOST': 'db.nvpelqbdwhtyfsmbabqo.supabase.co',
+        'NAME': 'zapmate',
+        'USER': 'zapuser',
+        'PASSWORD': 'zapuser',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
