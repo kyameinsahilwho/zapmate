@@ -23,5 +23,6 @@ urlpatterns = [
     path('userfollows/',UserFollows.as_view(),name='user-follows'),
     path('home/',HomeView.as_view(),name='home'),
     path('homehastags/',HomeHashtagsView.as_view(),name='home-hashtags'),
+    path('zaptriggers/',ZaptriggerView.as_view(),name='zap-triggers'),
 
 ]

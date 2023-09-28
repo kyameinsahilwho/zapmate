@@ -206,5 +206,19 @@ class HomeCapsuleSerializer(serializers.ModelSerializer):
         comments = Comment.objects.filter(timecapsule=obj)
         serializer = CommentSerializer(comments, many=True, context={'request': self.context.get('request')})
         return serializer.data
-
+    
+class ZapTriggerSerializer(serializers.ModelSerializer):
+    userbypfp = serializers.SerializerMethodField()
+    username = serializers.CharField(source='userby.username', read_only=True)
+    class Meta:
+        model = ZapTriggers
+        fields = ['username','message','trigger_date','userbypfp']
+        read_only_fields = ['trigger_date','username','message','userbypfp']
+    def get_userbypfp(self, obj):
+        user = CustomUser.objects.get(id=obj.userby_id)
+        profile = Profile.objects.get(user=user)
+        if profile.profile_picture:
+            return self.context["request"].build_absolute_uri(profile.profile_picture.url)
+        else:
+            return None
     

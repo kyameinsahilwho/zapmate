@@ -18,6 +18,15 @@ from .permissions import IsNotSuperuserOrStaff
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from django.http import JsonResponse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+def are_friends(user_id_1, user_id_2):
+    if Follows.objects.filter(user_id=user_id_1, follows_id=user_id_2).exists() and Follows.objects.filter(user_id=user_id_2, follows_id=user_id_1).exists():
+        return True
+    else:
+        return False
+    
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -114,6 +123,15 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
         user_id = self.request.user.id
         serializer.save(user_id=user_id,hashtags=hashtags)
 
+@receiver(post_save, sender=TimeCapsule)
+def send_notification_to_followers(sender, instance, created, **kwargs):
+    if created:
+        user_id = instance.user_id
+        followers = Follows.objects.filter(follows=user_id)
+        for follower in followers:
+            zap_trigger = ZapTriggers(userby=instance.user,userfor=follower.user, message=f"New time capsule created by {instance.user.username}: {instance.title}")
+            zap_trigger.save()
+
 class CommentListCreateView(generics.ListCreateAPIView):
     queryset=Comment.objects.all()
     serializer_class = CommentSerializer
@@ -124,6 +142,14 @@ class CommentListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         user_id = self.request.user.id
         serializer.save(user_id=user_id)
+
+@receiver(post_save, sender=Comment)
+def send_notification_to_owner(sender, instance, created, **kwargs):
+    if created:
+        time_capsule = instance.timecapsule
+        owner = time_capsule.user
+        zap_trigger = ZapTriggers(userby=instance.user, userfor=owner, message=f"New comment posted on your time capsule by {instance.user.username}: {instance.comment}")
+        zap_trigger.save()
 
 class CommentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
@@ -167,6 +193,14 @@ class FollowsListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         user_id = self.request.user.id
         serializer.save(user_id=user_id)
+
+@receiver(post_save, sender=Follows)
+def send_notification_to_followed_user(sender, instance, created, **kwargs):
+    if created:
+        user_id = CustomUser.objects.get(id=instance.follows_id)
+        follower = instance.user
+        zap_trigger = ZapTriggers(userby=follower, userfor=user_id, message=f"You have a new follower: {follower.username}")
+        zap_trigger.save()
 
 class FollowsRetrieveDestroyView(generics.RetrieveDestroyAPIView):
     serializer_class = FollowsSerializer
@@ -254,7 +288,13 @@ class HomeView(generics.ListAPIView):
         for follow in follows:
             follows_list.append(follow.follows)
         public_capsules = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).exclude(user=user_id)
-        return TimeCapsule.objects.filter(Q(user__in=follows_list) | Q(id__in=public_capsules), is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).order_by('-publish_date')
+        private_capsules = TimeCapsule.objects.filter(is_private=True, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30), user__in=follows_list)
+        friend_capsules = []
+        for capsule in private_capsules:
+            if are_friends(user_id, capsule.user_id):
+                friend_capsules.append(capsule)
+        friend_capsules = [obj.id for obj in friend_capsules]
+        return TimeCapsule.objects.filter(Q(user__in=follows_list) | Q(id__in=public_capsules.values('id')) | Q(id__in=friend_capsules), available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).order_by('-publish_date')
     
 class HomeHashtagsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -281,8 +321,10 @@ class HomeHashtagsView(generics.ListAPIView):
             suggested_people_list.append({'username': person.username,'pfp':request.build_absolute_uri(profile.profile_picture.url) if profile.profile_picture else ""})
         return JsonResponse({"hashtags": hashtags_list_with_count[:5], "suggested_people": suggested_people_list})
     
-def are_friends(user_id_1, user_id_2):
-    if Follows.objects.filter(user_id=user_id_1, follows_id=user_id_2).exists() and Follows.objects.filter(user_id=user_id_2, follows_id=user_id_1).exists():
-        return True
-    else:
-        return False
+class ZaptriggerView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ZapTriggerSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return ZapTriggers.objects.filter(userfor=user_id).order_by('-trigger_date')
