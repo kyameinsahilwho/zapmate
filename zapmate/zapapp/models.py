@@ -109,3 +109,14 @@ class Follows(models.Model):
 
     class Meta:
         ordering = ['follow_date']
+
+class Notifications(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
+    timecapsule = models.ForeignKey(TimeCapsule, on_delete=models.CASCADE, related_name='notifications')
+    publish_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.user.username + ' has a notification'
+
+    class Meta:
+        ordering = ['publish_date']

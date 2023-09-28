@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from datetime import datetime, timedelta
+from django.db.models import Q
 from django.db.models import Count
 import random
 from django.db.models.functions import Random
@@ -252,7 +253,8 @@ class HomeView(generics.ListAPIView):
         follows_list = []
         for follow in follows:
             follows_list.append(follow.follows)
-        return TimeCapsule.objects.filter(user__in=follows_list,is_private=False,available_date__lte=timezone.now()+ timedelta(hours=5, minutes=30)).order_by('-publish_date')
+        public_capsules = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).exclude(user=user_id)
+        return TimeCapsule.objects.filter(Q(user__in=follows_list) | Q(id__in=public_capsules), is_private=False, available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).order_by('-publish_date')
     
 class HomeHashtagsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -278,3 +280,9 @@ class HomeHashtagsView(generics.ListAPIView):
             print(profile)
             suggested_people_list.append({'username': person.username,'pfp':request.build_absolute_uri(profile.profile_picture.url) if profile.profile_picture else ""})
         return JsonResponse({"hashtags": hashtags_list_with_count[:5], "suggested_people": suggested_people_list})
+    
+def are_friends(user_id_1, user_id_2):
+    if Follows.objects.filter(user_id=user_id_1, follows_id=user_id_2).exists() and Follows.objects.filter(user_id=user_id_2, follows_id=user_id_1).exists():
+        return True
+    else:
+        return False

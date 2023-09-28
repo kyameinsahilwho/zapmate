@@ -13,8 +13,8 @@ export default function User() {
   const [capsuleData, setCapsuleData] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const followButtonClass = !follows
-  ? "rounded-lg bg-blue-600 text-white px-4 py-1.5 hover:bg-blue-700 dark:bg-dark2 dark:hover:bg-dark3 dark:text-white"
-  : "rounded-lg bg-white text-blue-600 border px-4 py-1.5 hover:bg-gray-100 dark:bg-dark3 dark:hover:bg-dark2 dark:text-black";
+    ? "rounded-lg bg-blue-600 text-white px-4 py-1.5 hover:bg-blue-700 dark:bg-dark2 dark:hover:bg-dark3 dark:text-white"
+    : "rounded-lg bg-white text-blue-600 border px-4 py-1.5 hover:bg-gray-100 dark:bg-dark3 dark:hover:bg-dark2 dark:text-black";
   async function fetchData() {
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
@@ -76,7 +76,6 @@ export default function User() {
     fetchCapsuleData();
   }, [location]);
   const handleFollow = async () => {
-    
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
     ).access;
@@ -167,7 +166,7 @@ export default function User() {
                       </h3>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center font-semibold gap-3 text-sm">
                     <button
                       type="button"
                       className={followButtonClass}
@@ -183,7 +182,7 @@ export default function User() {
                       >
                         {" "}
                         <ion-icon
-                          className="text-xl"
+                          class="text-xl md hydrated"
                           name="ellipsis-horizontal"
                         />
                       </button>
@@ -195,46 +194,10 @@ export default function User() {
                           <a href="#">
                             {" "}
                             <ion-icon
-                              className="text-xl"
-                              name="pricetags-outline"
-                            />{" "}
-                            Unfollow{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="time-outline"
-                            />{" "}
-                            Mute story{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="flag-outline"
-                            />{" "}
-                            Report{" "}
-                          </a>
-                          <a href="#">
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
+                              class="text-xl md hydrated"
                               name="share-outline"
                             />{" "}
                             Share profile{" "}
-                          </a>
-                          <hr />
-                          <a
-                            href="#"
-                            className="text-red-400 hover:!bg-red-50 dark:hover:!bg-red-500/50"
-                          >
-                            {" "}
-                            <ion-icon
-                              className="text-xl"
-                              name="stop-circle-outline"
-                            />{" "}
-                            Block{" "}
                           </a>
                         </nav>
                       </div>
@@ -284,18 +247,18 @@ export default function User() {
                             <div className="flex items-center gap-2">
                               {" "}
                               <ion-icon
-                                className="text-2xl"
+                                class="text-2xl md hydrated"
                                 name="heart-circle"
                               />{" "}
-                              {item.likes}
+                              {item.total_likes}
                             </div>
                             <div className="flex items-center gap-2">
                               {" "}
                               <ion-icon
-                                className="text-2xl"
+                                class="text-2xl md hydrated"
                                 name="chatbubble-ellipses"
                               />{" "}
-                              {item.comments}
+                              {item.total_comments}
                             </div>
                           </div>
                         </div>

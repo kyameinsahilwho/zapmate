@@ -608,7 +608,7 @@ export default function Sidebar() {
             </span>
             <ion-icon
               name="chevron-forward-outline"
-              className="text-xl ml-auto duration-200 group-aria-expanded:-rotate-90 max-xl:hidden"
+              class="text-xl ml-auto duration-200 group-aria-expanded:-rotate-90 max-xl:hidden md hydrated"
             />
           </a>
           <div
@@ -651,7 +651,7 @@ export default function Sidebar() {
                   className="flex gap-3 rounded-md p-2 hover:bg-secondery"
                 >
                   {" "}
-                  <ion-icon name="settings-outline" className="text-lg" />{" "}
+                  <ion-icon name="settings-outline" class="text-lg md hydrated" />{" "}
                   Acount Setting
                 </a>
               </li>
@@ -662,7 +662,7 @@ export default function Sidebar() {
                   className="flex gap-3 rounded-md p-2 hover:bg-rose-500 hover:text-white"
                 >
                   {" "}
-                  <ion-icon name="log-out-outline" className="text-lg" /> Log
+                  <ion-icon name="log-out-outline" class="text-lg md hydrated" /> Log
                   Out
                 </a>
               </li>

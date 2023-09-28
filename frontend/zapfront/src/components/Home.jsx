@@ -11,7 +11,6 @@ export default function Home() {
   const [comment, setComment] = useState({});
   const [follows, setFollows] = useState(false);
   const handleFollow = async (username) => {
-    
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
     ).access;
@@ -203,34 +202,35 @@ export default function Home() {
                       type="button"
                       className="button__ico text-red-500 bg-red-100 dark:bg-slate-700"
                     >
-                      {" "}
-                      <ion-icon className="text-lg" name="heart" />{" "}
+                      <ion-icon
+                        class="text-lg md hydrated"
+                        name="heart"
+                        role="img"
+                      ></ion-icon>
                     </button>
                     <a href="#">{post.total_likes}</a>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
                       className="button__ico bg-slate-200/70 dark:bg-slate-700"
                     >
-                      {" "}
                       <ion-icon
-                        className="text-lg"
+                        class="text-xl md hydrated"
                         name="chatbubble-ellipses"
-                      />{" "}
+                      />
                     </button>
                     <span>{post.total_comments}</span>
                   </div>
                   <button type="button" className="button__ico ml-auto">
-                    {" "}
-                    <ion-icon
-                      className="text-xl"
-                      name="paper-plane-outline"
-                    />{" "}
-                  </button>
+                  <ion-icon
+                        class="text-xl md hydrated"
+                        name={post ? post.is_private ? "lock-closed-outline" : "globe-outline" : "globe-outline"}
+                      />{" "}
+                  </button> 
                   <button type="button" className="button__ico">
                     {" "}
-                    <ion-icon className="text-xl" name="share-outline" />{" "}
+                    <ion-icon class="text-xl md hydrated" name="share-outline" />{" "}
                   </button>
                 </div>
                 {/* comments */}
@@ -269,7 +269,7 @@ export default function Home() {
                     >
                       <ion-icon
                         name="chevron-down-outline"
-                        className="ml-auto duration-200 group-aria-expanded:rotate-180"
+                        class="ml-auto duration-200 group-aria-expanded:rotate-180"
                       />
                       More Comment
                     </button>
@@ -288,7 +288,12 @@ export default function Home() {
                       rows={1}
                       className="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"
                       defaultValue={""}
-                      onChange={(e) => setComment({ comment: e.target.value,timecapsule:post.id })}
+                      onChange={(e) =>
+                        setComment({
+                          comment: e.target.value,
+                          timecapsule: post.id,
+                        })
+                      }
                     />
                   </div>
                   <button
@@ -307,7 +312,7 @@ export default function Home() {
           <div className="lg:max-w-[370px] md:max-w-[510px] mx-auto">
             <div
               className="xl:space-y-6 space-y-3 md:pb-12"
-              uk-sticky="end: #js-oversized; offset: 50; media:992"
+              data-uk-sticky="end: #js-oversized; offset: 50; media:992"
             >
               {/* peaple you might know */}
               <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
@@ -315,7 +320,7 @@ export default function Home() {
                   <h3 className="font-bold text-base"> Suggested People </h3>
                   <button type="button">
                     {" "}
-                    <ion-icon name="sync-outline" className="text-xl" />{" "}
+                    <ion-icon name="sync-outline" class="text-xl md hydrated" />{" "}
                   </button>
                 </div>
                 <div className="space-y-4 capitalize text-xs font-normal mt-5 mb-2 text-gray-500 dark:text-white/80">
@@ -345,7 +350,7 @@ export default function Home() {
                       <button
                         type="button"
                         className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"
-                        onClick={()=>handleFollow(person.username)}
+                        onClick={() => handleFollow(person.username)}
                       >
                         {" "}
                         Follow{" "}
@@ -361,7 +366,7 @@ export default function Home() {
                     <h3 className="font-bold text-base"> Trends for you </h3>
                     <button type="button">
                       {" "}
-                      <ion-icon name="sync-outline" className="text-xl" />{" "}
+                      <ion-icon name="sync-outline" class="text-xl md hydrated" />{" "}
                     </button>
                   </div>
                   <div className="space-y-3.5 capitalize text-xs font-normal mt-5 mb-2 text-gray-600 dark:text-white/80">

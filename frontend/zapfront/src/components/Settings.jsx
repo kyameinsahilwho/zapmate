@@ -223,14 +223,14 @@ export default function Settings() {
               href="#"
               uk-slider-item="previous"
             >
-              <ion-icon name="chevron-back" className="text-2xl ml-1" />
+              <ion-icon name="chevron-back" class="text-2xl ml-1 md hydrated" />
             </a>
             <a
               className="absolute right-0 -translate-y-1/2 top-1/2 flex items-center w-20 h-full p-2.5 justify-end rounded-xl bg-gradient-to-l from-white via-white dark:from-slate-800 dark:via-slate-800"
               href="#"
               uk-slider-item="next"
             >
-              <ion-icon name="chevron-forward" className="text-2xl mr-1" />
+              <ion-icon name="chevron-forward" class="text-2xl mr-1 md hydrated" />
             </a>
           </div>
         </div>
