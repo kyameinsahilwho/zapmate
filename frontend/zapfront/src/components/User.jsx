@@ -10,8 +10,36 @@ export default function User() {
   const { username } = useParams();
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
-  const [capsuleData, setCapsuleData] = useState([]);
+  const [postedCapsules, setPostedCapsules] = useState([]);
+  const [upcomingCapsules, setUpcomingCapsules] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [countdownStrings, setCountdownStrings] = useState([]);
+  const [countdowns, setCountdowns] = useState([]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      const strings = countdowns.map((endDate) => {
+        const distance = endDate.getTime() - now.getTime();
+
+        if (distance <= 0) {
+          return 'Countdown expired';
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds left`;
+      });
+
+      setCountdownStrings(strings);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [countdowns]);
+
+
   const followButtonClass = !follows
     ? "rounded-lg bg-blue-600 text-white px-4 py-1.5 hover:bg-blue-700 dark:bg-dark2 dark:hover:bg-dark3 dark:text-white"
     : "rounded-lg bg-white text-blue-600 border px-4 py-1.5 hover:bg-gray-100 dark:bg-dark3 dark:hover:bg-dark2 dark:text-black";
@@ -50,6 +78,7 @@ export default function User() {
     );
     const data = await response.json();
     setFollows(data.follows);
+    
   }
 
   async function fetchCapsuleData() {
@@ -67,7 +96,9 @@ export default function User() {
       }
     );
     const capsuleData = await response.json();
-    setCapsuleData(capsuleData);
+    setPostedCapsules(capsuleData.posted);
+    setUpcomingCapsules(capsuleData.upcoming);
+    setCountdowns(capsuleData.upcoming.map((item) => new Date(item.available_date)))
   }
   useEffect(() => {
     setLoading(true);
@@ -92,6 +123,7 @@ export default function User() {
     );
     const data = await response.json();
     fetchData();
+    fetchCapsuleData();
     setFollows(data.follows);
   };
   if (loading) {
@@ -207,80 +239,193 @@ export default function User() {
               </div>
             </div>
           </div>
-          <div className="mt-8">
-            {/* post heading */}
-            <div className="flex items-center justify-between py-3">
-              <h1 className="text-xl font-bold text-black dark:text-white">
-                Time Capsules
-              </h1>
+          <div className="mt-10">
+            <div data-uk-sticky="cls-active: bg-slate-100/60 z-30 backdrop-blur-lg px-4 dark:bg-slate-800/60; start: 500; animation: uk-animation-slide-top">
+              <nav className="text-sm text-center text-gray-500 capitalize font-semibold dark:text-white">
+                <ul
+                  className="flex gap-2 justify-center border-t dark:border-slate-700"
+                  data-uk-switcher="connect: #story_tab ; animation: uk-animation-fade, uk-animation-slide-left-medium"
+                >
+                  <li>
+                    {" "}
+                    <a
+                      href="#"
+                      className="flex items-center p-4 py-2.5 -mb-px border-t-2 border-transparent aria-expanded:text-black aria-expanded:border-black aria-expanded:dark:text-white aria-expanded:dark:border-white"
+                    >
+                      {" "}
+                      <ion-icon
+                        class="mr-2 text-2xl md hydrated"
+                        name="camera-outline"
+                      />{" "}
+                      Posted
+                    </a>{" "}
+                  </li>
+                  <li>
+                    {" "}
+                    <a
+                      href="#"
+                      className="flex items-center p-4 py-2.5 -mb-px border-t-2 border-transparent aria-expanded:text-black aria-expanded:border-black aria-expanded:dark:text-white aria-expanded:dark:border-white"
+                    >
+                      {" "}
+                      <ion-icon
+                        name="time-outline"
+                        class="mr-2 text-2xl md hydrated"
+                      />{" "}
+                      Upcoming{" "}
+                    </a>{" "}
+                  </li>
+                </ul>
+              </nav>
             </div>
-            {/* Post list */}
-            <div
-              className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-3 mt-6"
-              uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100"
-            >
-              {capsuleData.length === 0 ? (
-                <>
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                  <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
-                </>
-              ) : (
-                capsuleData.map((item) => (
-                  <a onClick={() => handlePostView(item.id)} key={item.id}>
-                    <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100">
-                      <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
-                        <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md">
-                          <img
-                            src={item.image}
-                            alt=""
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm uk-transition-fade shadow-md">
-                          <div className="flex items-center justify-center gap-4 text-white w-full h-full shadow-md">
-                            <div className="flex items-center gap-2">
-                              {" "}
-                              <ion-icon
-                                class="text-2xl md hydrated"
-                                name="heart-circle"
-                              />{" "}
-                              {item.total_likes}
+            <div id="story_tab" className="uk-switcher">
+              <div className="mt-8">
+                {/* post heading */}
+                <div className="flex items-center justify-between py-3">
+                  <h1 className="text-xl font-bold text-black dark:text-white">
+                    Time Capsules
+                  </h1>
+                </div>
+                {/* Post list */}
+                <div
+                  className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-3 mt-6"
+                  uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100"
+                >
+                  {postedCapsules.length === 0 ? (
+                    <>
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                    </>
+                  ) : (
+                    postedCapsules.map((item) => (
+                      <a onClick={() => handlePostView(item.id)} key={item.id}>
+                        <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100">
+                          <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
+                            <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md">
+                              <img
+                                src={item.image}
+                                alt=""
+                                className="object-cover w-full h-full"
+                              />
                             </div>
-                            <div className="flex items-center gap-2">
-                              {" "}
-                              <ion-icon
-                                class="text-2xl md hydrated"
-                                name="chatbubble-ellipses"
-                              />{" "}
-                              {item.total_comments}
+                            <div className="absolute inset-0 bg-white/5 backdrop-blur-sm uk-transition-fade shadow-md">
+                              <div className="flex items-center justify-center gap-4 text-white w-full h-full shadow-md">
+                                <div className="flex items-center gap-2">
+                                  {" "}
+                                  <ion-icon
+                                    class="text-2xl md hydrated"
+                                    name="heart-circle"
+                                  />{" "}
+                                  {item.total_likes}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  {" "}
+                                  <ion-icon
+                                    class="text-2xl md hydrated"
+                                    name="chatbubble-ellipses"
+                                  />{" "}
+                                  {item.total_comments}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </a>
-                ))
-              )}
-            </div>
-            {selectedPost && (
-              <div>
-                <ProfileCapsuleView
-                  item={capsuleData.find((item) => item.id === selectedPost)}
-                  handleClosePostView={handleClosePostView}
-                  selectedPost={selectedPost}
-                />
-                <div
-                  className="uk-modal-backdrop"
-                  onClick={handleClosePostView}
-                ></div>
+                      </a>
+                    ))
+                  )}
+                </div>
+                {selectedPost && (
+                  <div>
+                    <ProfileCapsuleView
+                      item={postedCapsules.find(
+                        (item) => item.id === selectedPost
+                      )}
+                      handleClosePostView={handleClosePostView}
+                      selectedPost={selectedPost}
+                      fetchCapsuleData={fetchCapsuleData}
+                    />
+                    <div
+                      className="uk-modal-backdrop"
+                      onClick={handleClosePostView}
+                    ></div>
+                  </div>
+                )}
               </div>
-            )}
+              <div className="mt-8">
+                {/* post heading */}
+                <div className="flex items-center justify-between py-3">
+                  <h1 className="text-xl font-bold text-black dark:text-white">
+                    Time Capsules
+                  </h1>
+                </div>
+                {/* Post list */}
+                <div
+                  className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-3 mt-6"
+                  data-uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100"
+                >
+                  {upcomingCapsules.length === 0 ? (
+                    <>
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                      <div className="w-full h-60 bg-slate-200/60 rounded-lg dark:bg-dark2 animate-pulse shadow-md" />
+                    </>
+                  ) : (
+                    upcomingCapsules.map((item, index) => {
+                      return (
+                        <a key={item.id}>
+                          <div className="lg:scale-105 shadow-lg z-10">
+                            <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
+                              <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md blur-[9px]">
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  className="object-cover w-full h-full"
+                                />
+                              </div>
+                              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm  shadow-md">
+                                <div className="flex items-center flex-col justify-center gap-4 text-white w-full h-full shadow-md">
+                                  <div className="flex items-center text-xl capitalize gap-2">
+                                    {item.title}
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    {countdownStrings[index]}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      );
+                    })
+                  )}
+                </div>
+                {selectedPost && (
+                  <div>
+                    <ProfileCapsuleView
+                      item={upcomingCapsules.find(
+                        (item) => item.id === selectedPost
+                      )}
+                      handleClosePostView={handleClosePostView}
+                      selectedPost={selectedPost}
+                    />
+                    <div
+                      className="uk-modal-backdrop"
+                      onClick={handleClosePostView}
+                    ></div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </main>

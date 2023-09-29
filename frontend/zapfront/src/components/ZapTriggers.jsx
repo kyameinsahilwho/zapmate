@@ -1,5 +1,7 @@
 import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 export default function ZapTriggers(){
+  const navigate = useNavigate();
   const [zapTriggers, setZapTriggers] = useState([]);
   async function getZapTriggers() {
     const accessToken = JSON.parse(
@@ -19,9 +21,10 @@ export default function ZapTriggers(){
     setZapTriggers(data);
   }
   useEffect(() => {
+    getZapTriggers();
     const intervalId = setInterval(() => {
       getZapTriggers();
-    }, 45000);
+    }, 10000);
   
     return () => {
       clearInterval(intervalId);
@@ -80,9 +83,9 @@ export default function ZapTriggers(){
                 <div className="px-5 py-3 -mx-2">
                   <h4 className="font-semibold">New</h4>
                 </div>
-                {zapTriggers && ( zapTriggers.map((zapTrigger) => (<a
-                  href="#"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl pr-10 hover:bg-secondery bg-teal-500/5"
+                {zapTriggers && ( zapTriggers.slice(0,5).map((zapTrigger) => (<a
+                  onClick={()=>navigate(`/user/${zapTrigger.username}`)}
+                  className="relative flex items-center gap-3 p-2 duration-200 cursor-pointer rounded-xl pr-10 hover:bg-secondery bg-teal-500/5"
                 >
                   <div className="relative w-12 h-12 shrink-0">
                     <img
@@ -105,14 +108,13 @@ export default function ZapTriggers(){
                 <div className="border-t px-5 py-3 -mx-2 mt-4 dark:border-slate-700/40">
                   <h4 className="font-semibold">This Week</h4>
                 </div>
-                <a
-                  href="#"
-                  className="relative flex items-center gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
+                {zapTriggers && ( zapTriggers.slice(0,5).map((zapTrigger) => (<a
+                  onClick={()=>navigate(`/user/${zapTrigger.username}`)}
+                  className="relative flex items-center cursor-pointer gap-3 p-2 duration-200 rounded-xl hover:bg-secondery"
                 >
                   <div className="relative w-12 h-12 shrink-0">
-                    {" "}
                     <img
-                      src="assets/images/avatars/avatar-4.jpg"
+                      src={zapTrigger.userbypfp}
                       alt=""
                       className="object-cover w-full h-full rounded-full"
                     />
@@ -120,15 +122,14 @@ export default function ZapTriggers(){
                   <div className="flex-1 ">
                     <p>
                       {" "}
-                      <b className="font-bold mr-1"> Jesse Steeve</b> sarah
-                      tagged you <br /> in a photo of your birthday party. 📸{" "}
+                      <b className="font-bold mr-1"> {zapTrigger.username}</b> {zapTrigger.message} 👋{" "}
                     </p>
                     <div className="text-xs text-gray-500 mt-1.5 dark:text-white/80">
-                      {" "}
-                      8 hours ago{" "}
+                      {zapTrigger.trigger_date}
                     </div>
+                    
                   </div>
-                </a>
+                </a>)))}
               </div>
             </div>
           </div>)

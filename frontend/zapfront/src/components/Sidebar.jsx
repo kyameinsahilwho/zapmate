@@ -334,18 +334,18 @@ export default function Sidebar() {
                 {" "}
                 <a
                   onClick={handlesettings}
-                  className="flex gap-3 rounded-md p-2 hover:bg-secondery"
+                  className="flex gap-3 rounded-md p-2 cursor-pointer hover:bg-secondery finer"
                 >
                   {" "}
                   <ion-icon name="settings-outline" class="text-lg md hydrated" />{" "}
-                  Acount Setting
+                  Account Setting
                 </a>
               </li>
               <li>
                 {" "}
                 <a
                   onClick={logoutUser}
-                  className="flex gap-3 rounded-md p-2 hover:bg-rose-500 hover:text-white"
+                  className="flex gap-3 rounded-md p-2 cursor-pointer hover:bg-rose-500 hover:text-white"
                 >
                   {" "}
                   <ion-icon name="log-out-outline" class="text-lg md hydrated" /> Log

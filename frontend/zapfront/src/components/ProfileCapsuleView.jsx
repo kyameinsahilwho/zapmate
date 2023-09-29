@@ -1,8 +1,12 @@
 import { useEffect, useState, memo, useContext } from "react";
 import { ProfileContext } from "../context/Profile";
+import { useNavigate } from "react-router-dom";
 const ProfileCapsuleView = memo(
-  ({ item, handleClosePostView, selectedPost }) => {
+  ({ item, handleClosePostView, selectedPost,fetchCapsuleData }) => {
+    const navigate = useNavigate();
+    console.log(item) 
     const { profileData } = useContext(ProfileContext);
+    const [comment, setComment] = useState({})
     const [comments, setComments] = useState([]);
     useEffect(() => {
       getComments();
@@ -27,6 +31,47 @@ const ProfileCapsuleView = memo(
       const data = await response.json();
       setComments(data);
     }
+    const handleliked = async (liked, id) => {
+      const accessToken = JSON.parse(
+        localStorage.getItem("zapmateAuthTokens")
+      ).access;
+      const method = liked ? "DELETE" : "POST";
+      const timecapsule = id;
+      const response = await fetch(
+        `http://localhost:8000/zapapp/${ !liked ? "like/" : `like/${liked}/`}`
+        ,
+        {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+  
+          },
+          body: JSON.stringify({ timecapsule: timecapsule }),
+        }
+      );
+      const data = await response;
+      fetchCapsuleData();
+    };
+    const handleComment = async () => {
+      const accessToken = JSON.parse(
+        localStorage.getItem("zapmateAuthTokens")
+      ).access;
+      const response = await fetch(`http://localhost:8000/zapapp/comment/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(comment),
+      });
+      const data = await response.json();
+      console.log(data);
+      setComment({});
+      fetchCapsuleData();
+      getComments();
+    };
+  
     if (!selectedPost) {
       return null;
     }
@@ -96,7 +141,8 @@ const ProfileCapsuleView = memo(
                     <div className="flex items-center gap-2.5">
                       <button
                         type="button"
-                        className="button__ico text-red-500 bg-red-100 dark:bg-slate-700"
+                        className={`button__ico ${ item ? item.liked ? "text-red-500" : "text-gray-300" : "text-gray-300"   } bg-red-100 dark:bg-slate-700`}
+                        onClick={() => handleliked(item.liked,item.id)}
                       >
                         <ion-icon
                           class="text-lg md hydrated"
@@ -132,7 +178,7 @@ const ProfileCapsuleView = memo(
                   </div>
                 </div>
               </div>
-              <div className="p-5 h-full max-h-[180px] lg:max-h-full overflow-y-auto flex-1">
+              <div className="p-5 h-full max-h-[180px] lg:max-h-full overflow-y-auto no-scrollbar flex-1">
                 {/* comment list */}
                 <div className="relative text-sm font-medium space-y-5">
                   {comments.map((comment) => (
@@ -147,8 +193,8 @@ const ProfileCapsuleView = memo(
                       />
                       <div className="flex-1">
                         <a
-                          href="#"
-                          className="text-black font-medium inline-block dark:text-white"
+                          onClick={()=>navigate(`/user/${comment.username}`)}
+                          className="text-black font-medium inline-block cursor-pointer dark:text-white"
                         >
                           {comment.username}
                         </a>
@@ -169,13 +215,21 @@ const ProfileCapsuleView = memo(
                 name
                 id
                 rows={1}
+                value={comment.comment ? comment.comment : ""}
                 placeholder="What is going on.."
                 className="w-[95%] ml-2 mt-1 resize-none"
+                onChange={(e) => setComment({comment:e.target.value,timecapsule:item.id})}
                 style={{ overflowY: "hidden" }}
                 defaultValue={""}
                 onInput={(e) => {
                   e.target.style.height = "auto";
                   e.target.style.height = `${e.target.scrollHeight}px`;
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault(); // prevent the default behavior of the Enter key
+                    handleComment(); // call your function here
+                  }
                 }}
               />
                 </div>

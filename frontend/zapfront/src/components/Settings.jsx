@@ -330,8 +330,8 @@ export default function Settings() {
                     </h4>
                     <p className=" mt-3">
                       We may still send you important notifications about your
-                      account and content outside of you preferred notivications
-                      settings
+                      account and content outside of you preferred notifications
+                      settings.
                     </p>
                   </div>
                   <div
@@ -371,39 +371,7 @@ export default function Settings() {
                         <span className="switch-button !relative" />
                       </label>
                     </div>
-                    <div className="w-full">
-                      <label className="switch flex justify-between items-center cursor-pointer gap-4">
-                        <div className="bg-purple-100 text-purple-500 rounded-full p-2 md:flex hidden shrink-0">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1 md:pr-8">
-                          <h4 className="text-base font-medium mb-1.5 text-black dark:text-white">
-                            {" "}
-                            web notifications
-                          </h4>
-                          <p className>
-                            {" "}
-                            You can receive notifications through your
-                            notifications center{" "}
-                          </p>
-                        </div>
-                        <input type="checkbox" />
-                        <span className="switch-button !relative" />
-                      </label>
-                    </div>
+                    
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-4 mt-16">

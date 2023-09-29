@@ -255,6 +255,7 @@ export default function Profile() {
                       )}
                       handleClosePostView={handleClosePostView}
                       selectedPost={selectedPost}
+                      fetchCapsuleData={fetchCapsuleData}
                     />
                     <div
                       className="uk-modal-backdrop"

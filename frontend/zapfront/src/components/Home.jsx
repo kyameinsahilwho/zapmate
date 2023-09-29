@@ -29,6 +29,30 @@ export default function Home() {
     fetchHastags();
     fetchData();
   };
+  const handleliked = async (liked, id) => {
+    const accessToken = JSON.parse(
+      localStorage.getItem("zapmateAuthTokens")
+    ).access;
+    const method = liked ? "DELETE" : "POST";
+    const timecapsule = id;
+    const response = await fetch(
+      `http://localhost:8000/zapapp/${ !liked ? "like/" : `like/${liked}/`}`
+      ,
+      {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
+        },
+        body: JSON.stringify({ timecapsule: timecapsule }),
+      }
+    );
+    const data = await response;
+    fetchData();
+  };
+
+
   const [suggestedPeople, setSuggestedPeople] = useState([]);
   async function fetchData() {
     const accessToken = JSON.parse(
@@ -90,57 +114,68 @@ export default function Home() {
   if (loading) {
     return (
       <>
-        <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
-          <div className="flex gap-3">
-            <div className="w-9 h-9 rounded-full bg-slate-300/20" />
-            <div className="flex-1 space-y-3">
-              <div className="w-40 h-5 rounded-md bg-slate-300/20" />
-              <div className="w-24 h-4 rounded-md bg-slate-300/20" />
+        <main className="2xl:ml-[--w-side] xl:ml-[--w-side-md] md:ml-[--w-side-small]">
+          <div className="main__inner">
+            <div
+              className="flex lg:flex-col xl:gap-10 md:gap-3 md:mt-10"
+              id="js-oversized"
+            >
+              <div className="md:max-w-[510px] mx-auto flex-1 xl:space-y-6 space-y-3"></div>
+              <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-full bg-slate-300/20" />
+                  <div className="flex-1 space-y-3">
+                    <div className="w-40 h-5 rounded-md bg-slate-300/20" />
+                    <div className="w-24 h-4 rounded-md bg-slate-300/20" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20" />
+                </div>
+                <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
+                <div className="flex gap-3">
+                  <div className="w-16 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-14 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
+                </div>
+              </div>
+              <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-full bg-slate-300/20" />
+                  <div className="flex-1 space-y-3">
+                    <div className="w-40 h-5 rounded-md bg-slate-300/20" />
+                    <div className="w-24 h-4 rounded-md bg-slate-300/20" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20" />
+                </div>
+                <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
+                <div className="flex gap-3">
+                  <div className="w-16 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-14 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
+                </div>
+              </div>
+              <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
+                <div className="flex gap-3">
+                  <div className="w-9 h-9 rounded-full bg-slate-300/20" />
+                  <div className="flex-1 space-y-3">
+                    <div className="w-40 h-5 rounded-md bg-slate-300/20" />
+                    <div className="w-24 h-4 rounded-md bg-slate-300/20" />
+                  </div>
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20" />
+                </div>
+                <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
+                <div className="flex gap-3">
+                  <div className="w-16 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-14 h-5 rounded-md bg-slate-300/20" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
+                  <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
+                </div>
+              </div>
+              
             </div>
-            <div className="w-6 h-6 rounded-full bg-slate-300/20" />
           </div>
-          <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
-          <div className="flex gap-3">
-            <div className="w-16 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-14 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
-          </div>
-        </div>
-        <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
-          <div className="flex gap-3">
-            <div className="w-9 h-9 rounded-full bg-slate-300/20" />
-            <div className="flex-1 space-y-3">
-              <div className="w-40 h-5 rounded-md bg-slate-300/20" />
-              <div className="w-24 h-4 rounded-md bg-slate-300/20" />
-            </div>
-            <div className="w-6 h-6 rounded-full bg-slate-300/20" />
-          </div>
-          <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
-          <div className="flex gap-3">
-            <div className="w-16 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-14 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
-          </div>
-        </div>
-        <div className="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
-          <div className="flex gap-3">
-            <div className="w-9 h-9 rounded-full bg-slate-300/20" />
-            <div className="flex-1 space-y-3">
-              <div className="w-40 h-5 rounded-md bg-slate-300/20" />
-              <div className="w-24 h-4 rounded-md bg-slate-300/20" />
-            </div>
-            <div className="w-6 h-6 rounded-full bg-slate-300/20" />
-          </div>
-          <div className="w-full h-52 rounded-lg bg-slate-300/10 my-3"></div>
-          <div className="flex gap-3">
-            <div className="w-16 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-14 h-5 rounded-md bg-slate-300/20" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20 ml-auto" />
-            <div className="w-6 h-6 rounded-full bg-slate-300/20  " />
-          </div>
-        </div>
+        </main>
       </>
     );
   }
@@ -152,11 +187,12 @@ export default function Home() {
           className="flex max-lg:flex-col xl:gap-10 md:gap-3 md:mt-10"
           id="js-oversized"
         >
-          <div className="md:max-w-[510px] mx-auto flex-1 xl:space-y-6 space-y-3">
+          <div className="md:max-w-[510px] mx-auto flex-1 xl:space-y-6 space-y-3"
+          data-uk-scrollspy="target: > div; cls: uk-animation-scale-up; delay: 100 ;repeat: false">
             {posts.map((post) => (
               <div
                 key={post.id}
-                className="bg-white rounded-xl shadow-sm text-sm font-medium border1 dark:bg-dark2"
+                className="bg-white  rounded-xl shadow-sm text-sm font-medium border1 dark:bg-dark2"
               >
                 <div className="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
                   <a
@@ -200,7 +236,8 @@ export default function Home() {
                   <div className="flex items-center gap-2.5">
                     <button
                       type="button"
-                      className="button__ico text-red-500 bg-red-100 dark:bg-slate-700"
+                      className={`button__ico $ ${post.liked ? "text-red-500" : "text-gray-300"  } bg-red-100 dark:bg-slate-700`}
+                      onClick={() => handleliked(post.liked,post.id)}
                     >
                       <ion-icon
                         class="text-lg md hydrated"
@@ -223,19 +260,28 @@ export default function Home() {
                     <span>{post.total_comments}</span>
                   </div>
                   <button type="button" className="button__ico ml-auto">
-                  <ion-icon
-                        class="text-xl md hydrated"
-                        name={post ? post.is_private ? "lock-closed-outline" : "globe-outline" : "globe-outline"}
-                      />{" "}
-                  </button> 
+                    <ion-icon
+                      class="text-xl md hydrated"
+                      name={
+                        post
+                          ? post.is_private
+                            ? "lock-closed-outline"
+                            : "globe-outline"
+                          : "globe-outline"
+                      }
+                    />{" "}
+                  </button>
                   <button type="button" className="button__ico">
                     {" "}
-                    <ion-icon class="text-xl md hydrated" name="share-outline" />{" "}
+                    <ion-icon
+                      class="text-xl md hydrated"
+                      name="share-outline"
+                    />{" "}
                   </button>
                 </div>
                 {/* comments */}
                 {post.comments.length !== 0 && (
-                  <div className="sm:p-4 p-2.5 border-t border-gray-100 font-normal space-y-3 relative dark:border-slate-700/40">
+                  <div className="sm:p-4 max-h-[200px] no-scrollbar overflow-y-scroll p-2.5 border-t border-gray-100 font-normal space-y-3 relative dark:border-slate-700/40">
                     {post.comments.map((comment) => (
                       <div
                         key={comment.id}
@@ -263,16 +309,7 @@ export default function Home() {
                         </div>
                       </div>
                     ))}
-                    <button
-                      type="button"
-                      className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 mt-2"
-                    >
-                      <ion-icon
-                        name="chevron-down-outline"
-                        class="ml-auto duration-200 group-aria-expanded:rotate-180"
-                      />
-                      More Comment
-                    </button>
+                    
                   </div>
                 )}
                 {/* add comment */}
@@ -318,9 +355,12 @@ export default function Home() {
               <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
                 <div className="flex justify-between text-black dark:text-white">
                   <h3 className="font-bold text-base"> Suggested People </h3>
-                  <button type="button">
+                  <button type="button" onClick={()=>fetchHastags()}>
                     {" "}
-                    <ion-icon name="sync-outline" class="text-xl md hydrated" />{" "}
+                    <ion-icon
+                      name="sync-outline"
+                      class="text-xl md hydrated"
+                    />{" "}
                   </button>
                 </div>
                 <div className="space-y-4 capitalize text-xs font-normal mt-5 mb-2 text-gray-500 dark:text-white/80">
@@ -364,10 +404,6 @@ export default function Home() {
                 <div className="bg-white rounded-xl shadow-sm p-5 px-6 border1 dark:bg-dark2">
                   <div className="flex justify-between text-black dark:text-white">
                     <h3 className="font-bold text-base"> Trends for you </h3>
-                    <button type="button">
-                      {" "}
-                      <ion-icon name="sync-outline" class="text-xl md hydrated" />{" "}
-                    </button>
                   </div>
                   <div className="space-y-3.5 capitalize text-xs font-normal mt-5 mb-2 text-gray-600 dark:text-white/80">
                     {hashtags.map((hashtag) => (
