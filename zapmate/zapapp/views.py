@@ -116,7 +116,7 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
         user_id = request.user.id
-        now = timezone.now() + timedelta(hours=5, minutes=30)
+        now = timezone.now()
         posted_capsules = TimeCapsule.objects.filter(
             user_id=user_id, available_date__lte=now)
         upcoming_capsules = TimeCapsule.objects.filter(
@@ -269,7 +269,7 @@ class ExploreView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TimeCapsuleSerializer
     queryset = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now(
-    ) + timedelta(hours=5, minutes=30)).order_by(Random())
+    )).order_by(Random())
     search_fields = ['hashtags', 'content', 'title']
 
 
@@ -318,9 +318,9 @@ class UserTimeCapsuleView(generics.ListAPIView):
 
         # Separate the time capsules based on the available date
         posted_capsules = queryset.filter(
-            available_date__lte=timezone.now() + timedelta(hours=5, minutes=30))
+            available_date__lte=timezone.now())
         upcoming_capsules = queryset.filter(
-            available_date__gt=timezone.now() + timedelta(hours=5, minutes=30))
+            available_date__gt=timezone.now())
         print(posted_capsules)
 
         # Serialize the time capsules and return a JSON response
@@ -374,15 +374,15 @@ class HomeView(generics.ListAPIView):
         for follow in follows:
             follows_list.append(follow.follows)
         public_capsules = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now(
-        ) + timedelta(hours=5, minutes=30)).exclude(user=user_id)
+        )).exclude(user=user_id)
         private_capsules = TimeCapsule.objects.filter(is_private=True, available_date__lte=timezone.now(
-        ) + timedelta(hours=5, minutes=30), user__in=follows_list)
+        ), user__in=follows_list)
         friend_capsules = []
         for capsule in private_capsules:
             if are_friends(user_id, capsule.user_id):
                 friend_capsules.append(capsule)
         friend_capsules = [obj.id for obj in friend_capsules]
-        return TimeCapsule.objects.filter(Q(user__in=follows_list) | Q(id__in=public_capsules.values('id')) | Q(id__in=friend_capsules), available_date__lte=timezone.now() + timedelta(hours=5, minutes=30)).order_by('-publish_date')
+        return TimeCapsule.objects.filter(Q(user__in=follows_list) | Q(id__in=public_capsules.values('id')) | Q(id__in=friend_capsules), available_date__lte=timezone.now()).order_by('-publish_date')
 
 
 class HomeHashtagsView(generics.ListAPIView):
@@ -390,7 +390,7 @@ class HomeHashtagsView(generics.ListAPIView):
 
     def get(self, request):
         hashtags = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now(
-        ) + timedelta(hours=5, minutes=30)).values_list('hashtags', flat=True)
+        )).values_list('hashtags', flat=True)
         hashtags_list = []
         for capsule_hashtags in hashtags:
             for hashtag in capsule_hashtags:
@@ -399,7 +399,7 @@ class HomeHashtagsView(generics.ListAPIView):
         hashtags_list_with_count = []
         for hashtag in hashtags_list:
             total_count = TimeCapsule.objects.filter(is_private=False, available_date__lte=timezone.now(
-            ) + timedelta(hours=5, minutes=30), hashtags__contains=[hashtag]).count()
+            ), hashtags__contains=[hashtag]).count()
             hashtags_list_with_count.append(
                 {'name': hashtag, 'total': total_count})
         random.shuffle(hashtags_list_with_count)
