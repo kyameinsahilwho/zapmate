@@ -17,10 +17,24 @@ export default function Settings() {
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [pfp, setPfp] = useState(null);
 
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
+  const handlepfp = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    console.log(reader.result);
+    reader.onloadend = () => {
+      const blob = new Blob([reader.result], { type: file.type });
+      const url = URL.createObjectURL(blob);
+      setProfilePicture(url);
+      setPfp(file);
+    };
+  }
 
   async function fetchData() {
     const accessToken = JSON.parse(
@@ -48,26 +62,23 @@ export default function Settings() {
   }
   async function handleProfileSubmit(e) {
     e.preventDefault();
-    const accessToken = JSON.parse(
-      localStorage.getItem("zapmateAuthTokens")
-    ).access;
-    const responseUpdate = await fetch(
-      `http://localhost:8000/zapapp/profile-update/`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          username: username,
-          first_name: first_name,
-          last_name: last_name,
-          bio: bio,
-          email: email,
-        }),
-      }
-    );
+    const accessToken = JSON.parse(localStorage.getItem("zapmateAuthTokens")).access;
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("first_name", first_name);
+    formData.append("last_name", last_name);
+    formData.append("bio", bio);
+    formData.append("email", email);
+    pfp ? formData.append("profile_picture", pfp) : console.log("no pfp");
+  
+    const responseUpdate = await fetch(`http://localhost:8000/zapapp/profile-update/`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+  
     console.log(responseUpdate);
     if (responseUpdate.status === 200) {
       toast.success('Profile updated successfully');  
@@ -131,11 +142,11 @@ export default function Settings() {
               <label htmlFor="file" className="cursor-pointer">
                 <img
                   id="img"
-                  src={profileData.profile_picture}
+                  src={profile_picture}
                   className="object-cover w-full h-full rounded-full"
                   alt=""
                 />
-                <input type="file" id="file" className="hidden" />
+                <input type="file" id="file" onChange={handlepfp} className="hidden" />
               </label>
               <label
                 htmlFor="file"

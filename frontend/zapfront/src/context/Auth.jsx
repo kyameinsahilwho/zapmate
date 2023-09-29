@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import jwtDecode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -30,7 +30,9 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (response.status === 401) {
-        alert("Invalid Credentials");
+        toast.error("Invalid Credentials");
+        setLoading(false);
+        navigate("/login", { replace: true });
         return;
       }
 
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(data);
         setUser(jwtDecode(data.access));
         setIsAuthenticated(true);
+        toast.success("Logged in Successfully");
         setLoading(false);
         navigate("/", { replace: true });
       } else {
@@ -104,7 +107,7 @@ export const AuthProvider = ({ children }) => {
   }, [authTokens, logoutUser]);
 
   useEffect(() => {
-    const REFRESH_INTERVAL = 1000 * 60 * 45; // 45 minutes
+    const REFRESH_INTERVAL = 1000 * 60 * 60 * 24; // 1 Day
     let interval = null;
 
     if (authTokens) {

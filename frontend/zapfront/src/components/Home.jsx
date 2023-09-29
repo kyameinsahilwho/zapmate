@@ -111,6 +111,16 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => {
+    checkCredentials();
+  }, []);
+
+
+  const checkCredentials = () => {
+    if (!localStorage.getItem("zapmateAuthTokens")) {
+      navigate("/login", { replace: true });
+    };
+  };
   if (loading) {
     return (
       <>

@@ -30,10 +30,11 @@ export default function Signup() {
       // Handle the response from the server
       if (response.ok) {
         alert("User Created Successfully! Now Login");
-        navigate("/", { replace: true });
+        navigate("/login", { replace: true });
       } else {
         // Handle the error
         alert("Something went wrong while creating the user!");
+        navigate("/signup", { replace: true });
       }
     } catch (error) {
       // Handle the error
@@ -138,7 +139,7 @@ export default function Signup() {
               </div>
               <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/login")}
                 className="font-medium w-full rounded-lg bg-white py-1.5 px-4 text-slate-900 h-[38px] active:scale-[0.97] transition-all duration-150"
               >
                 {" "}

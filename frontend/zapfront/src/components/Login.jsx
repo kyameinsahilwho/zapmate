@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/Auth";
 import logo from "../assets/images/logo.png";
-
+import { ToastContainer } from "react-toastify";
 function Login() {
   let { loginUser } = useContext(AuthContext);
 
@@ -23,6 +23,7 @@ function Login() {
 
   return (
     <div className="flex flex-col h-screen justify-center items-center">
+      <ToastContainer />
       <div className="max-w-sm mx-auto md:px-10 p-4 w-full">
         <div uk="true">
           <div className="flex justify-center mb-6">
@@ -59,12 +60,6 @@ function Login() {
               placeholder="Password"
               required
             />
-            <a href="#" className="hidden">
-              <div className="text-sm text-right text-gray-400 py-4">
-                {" "}
-                Forget password{" "}
-              </div>
-            </a>
             <button
               type="submit"
               className="font-medium w-full rounded-lg bg-slate-900 py-1.5 px-4 text-white h-[38px] active:scale-97 transition-all duration-150"
