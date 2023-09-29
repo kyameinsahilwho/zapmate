@@ -118,7 +118,7 @@ const ProfileCapsuleView = memo(
                 {/* story heading */}
                 <div className="flex gap-3 text-sm font-medium">
                   <img
-                    src="assets/images/avatars/avatar-5.jpg"
+                    src={item ? item.pfp : "assets/images/avatars/avatar-1.jpg"}
                     alt=""
                     className="w-9 h-9 rounded-full"
                   />

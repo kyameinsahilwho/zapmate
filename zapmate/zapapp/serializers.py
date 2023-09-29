@@ -128,10 +128,11 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
     total_likes = serializers.SerializerMethodField()
     total_comments = serializers.SerializerMethodField()
     liked = serializers.SerializerMethodField()
+    pfp = serializers.SerializerMethodField()
 
     class Meta:
         model = TimeCapsule
-        fields = ['id', 'username', 'title', 'content', 'publish_date', 'available_date',
+        fields = ['id', 'username', 'title', 'content', 'publish_date', 'available_date','pfp',
                   'image', 'is_available', 'hashtags', 'is_private', 'total_likes', 'total_comments','liked']
         read_only_fields = ['publish_date', 'is_available']
 
@@ -151,6 +152,13 @@ class TimeCapsuleSerializer(serializers.ModelSerializer):
                 except Like.DoesNotExist:
                     pass
         return False
+    def get_pfp(self, obj):
+        user = CustomUser.objects.get(id=obj.user_id)
+        profile = Profile.objects.get(user=user)
+        if profile.profile_picture:
+            return self.context["request"].build_absolute_uri(profile.profile_picture.url)
+        else:
+            return None
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
