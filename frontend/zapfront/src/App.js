@@ -15,6 +15,7 @@ import {createContext, useContext } from "react";
 import Settings from "./components/Settings";
 import Explore from "./components/Explore";
 import Loader from "./components/Loader";
+import FuturePeek from "./components/FuturePeek";
 function App() {
   const { user,loading } = useContext(AuthContext);
   const location = useLocation();
@@ -29,6 +30,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/user/:username" element={<User />} />
+        <Route path="/futurepeek" element={<FuturePeek />} />
         <Route path="/" element={<Home />} />
       </Routes>
       {console.log(user)}

@@ -123,7 +123,7 @@ export default function ZapTriggers(){
                   <div className="flex-1 ">
                     <p>
                       {" "}
-                      <b className="font-bold mr-1"> {zapTrigger.username}</b> {zapTrigger.message} 👋{" "}
+                      <b className="font-bold mr-1"> {zapTrigger.username}</b> {zapTrigger.message} {" "}
                     </p>
                     <div className="text-xs text-gray-500 mt-1.5 dark:text-white/80">
                       {datetotext(zapTrigger.trigger_date)}
@@ -148,7 +148,7 @@ export default function ZapTriggers(){
                   <div className="flex-1 ">
                     <p>
                       {" "}
-                      <b className="font-bold mr-1"> {zapTrigger.username}</b> {zapTrigger.message} 👋{" "}
+                      <b className="font-bold mr-1"> {zapTrigger.username}</b> {zapTrigger.message}{" "}
                     </p>
                     <div className="text-xs text-gray-500 mt-1.5 dark:text-white/80">
                       {datetotext(zapTrigger.trigger_date)}

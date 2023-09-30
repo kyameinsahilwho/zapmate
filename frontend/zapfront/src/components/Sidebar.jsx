@@ -276,6 +276,10 @@ export default function Sidebar() {
             </svg>
             <span className="max-xl:hidden"> Profile </span>
           </a>
+          <a onClick={()=>navigate('/futurepeek')} className="max-md:!hidden active">
+          <ion-icon name="infinite" class="text-2xl md hydrated" />
+            <span className="max-xl:hidden"> Future Peek </span>
+          </a>
         </nav>
         {/* profile */}
         <div>

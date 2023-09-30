@@ -15,6 +15,17 @@ export default function User() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [countdownStrings, setCountdownStrings] = useState([]);
   const [countdowns, setCountdowns] = useState([]);
+  function handleShareProfileClick(e) {
+    e.preventDefault();
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        url: window.location.href,
+      });
+    } else {
+      console.log("Sharing not supported in this browser");
+    }
+  }
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -22,15 +33,17 @@ export default function User() {
         const distance = endDate.getTime() - now.getTime();
 
         if (distance <= 0) {
-          return 'Countdown expired';
+          return "Countdown expired";
         }
 
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds left`;
+        return `${days} days\n ${hours} hours\n ${minutes} minutes\n ${seconds} seconds left`;
       });
 
       setCountdownStrings(strings);
@@ -38,7 +51,6 @@ export default function User() {
 
     return () => clearInterval(interval);
   }, [countdowns]);
-
 
   const followButtonClass = !follows
     ? "rounded-lg bg-blue-600 text-white px-4 py-1.5 hover:bg-blue-700 dark:bg-dark2 dark:hover:bg-dark3 dark:text-white"
@@ -78,7 +90,6 @@ export default function User() {
     );
     const data = await response.json();
     setFollows(data.follows);
-    
   }
 
   async function fetchCapsuleData() {
@@ -98,7 +109,9 @@ export default function User() {
     const capsuleData = await response.json();
     setPostedCapsules(capsuleData.posted);
     setUpcomingCapsules(capsuleData.upcoming);
-    setCountdowns(capsuleData.upcoming.map((item) => new Date(item.available_date)))
+    setCountdowns(
+      capsuleData.upcoming.map((item) => new Date(item.available_date))
+    );
   }
   useEffect(() => {
     setLoading(true);
@@ -223,7 +236,7 @@ export default function User() {
                         uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click;offset:10"
                       >
                         <nav>
-                          <a href="#">
+                          <a href="#" onClick={handleShareProfileClick}>
                             {" "}
                             <ion-icon
                               class="text-xl md hydrated"
@@ -383,21 +396,21 @@ export default function User() {
                     upcomingCapsules.map((item, index) => {
                       return (
                         <a key={item.id}>
-                          <div className="lg:scale-105 shadow-lg z-10">
+                          <div className="rounded-lg text-center drop-shadow shadow-xl z-10 shadow-black">
                             <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
                               <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md blur-[9px]">
                                 <img
                                   src={item.image}
                                   alt=""
-                                  className="object-cover w-full h-full"
+                                  className="object-cover w-full h-full filter brightness-50"
                                 />
                               </div>
-                              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm  shadow-md">
+                              <div className="absolute inset-0 bg-white/5 backdrop-blur-xl">
                                 <div className="flex items-center flex-col justify-center gap-4 text-white w-full h-full shadow-md">
-                                  <div className="flex items-center text-xl capitalize gap-2">
+                                  <div className="flex items-center text-xl capitalize gap-2 drop-shadow  font-semibold">
                                     {item.title}
                                   </div>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex capitalize drop-shadow font-semibold items-center gap-2 whitespace-pre-line">
                                     {countdownStrings[index]}
                                   </div>
                                 </div>

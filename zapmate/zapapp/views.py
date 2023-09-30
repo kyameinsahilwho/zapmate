@@ -118,9 +118,9 @@ class TimeCapsuleListCreateView(generics.ListCreateAPIView):
         user_id = request.user.id
         now = timezone.now()
         posted_capsules = TimeCapsule.objects.filter(
-            user_id=user_id, available_date__lte=now)
+            user_id=user_id, available_date__lte=now).order_by('-publish_date')
         upcoming_capsules = TimeCapsule.objects.filter(
-            user_id=user_id, available_date__gt=now)
+            user_id=user_id, available_date__gt=now).order_by('-publish_date')
         posted_serializer = TimeCapsuleSerializer(
             posted_capsules, many=True, context={'request': request})
         upcoming_serializer = TimeCapsuleSerializer(
@@ -146,7 +146,7 @@ def send_notification_to_followers(sender, instance, created, **kwargs):
         followers = Follows.objects.filter(follows=user_id)
         for follower in followers:
             zap_trigger = ZapTriggers(userby=instance.user, userfor=follower.user,
-                                      message=f"New time capsule created by {instance.user.username}: {instance.title}")
+                                      message=f"New time capsule created by {instance.user.username}: {instance.title} 💊")
             zap_trigger.save()
 
 
@@ -167,7 +167,7 @@ def send_notification_to_owner(sender, instance, created, **kwargs):
         time_capsule = instance.timecapsule
         owner = time_capsule.user
         zap_trigger = ZapTriggers(userby=instance.user, userfor=owner,
-                                  message=f"New comment posted on your time capsule by {instance.user.username}: {instance.comment}")
+                                  message=f"New comment posted on your time capsule by {instance.user.username}: {instance.comment} 🗨️")
         zap_trigger.save()
 
 
@@ -196,7 +196,7 @@ def send_notification_to_owner(sender, instance, created, **kwargs):
         time_capsule = instance.timecapsule
         owner = time_capsule.user
         zap_trigger = ZapTriggers(userby=instance.user, userfor=owner,
-                                  message=f"Your time capsule '{time_capsule.title}' was liked by {instance.user.username}.")
+                                  message=f"Your time capsule '{time_capsule.title}' was liked by {instance.user.username}. ❤️")
         zap_trigger.save()
 
 
@@ -236,7 +236,7 @@ def send_notification_to_followed_user(sender, instance, created, **kwargs):
         user_id = CustomUser.objects.get(id=instance.follows_id)
         follower = instance.user
         zap_trigger = ZapTriggers(userby=follower, userfor=user_id,
-                                  message=f"You have a new follower: {follower.username}")
+                                  message=f"You have a new follower: {follower.username} 🤝")
         zap_trigger.save()
 
 
@@ -276,8 +276,13 @@ class ExploreView(generics.ListAPIView):
 class SearchView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
-    queryset = Profile.objects.all()
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
+    def get_queryset(self):
+        queryset = Profile.objects.all()
+        user_id = self.request.user.id
+        if user_id:
+            queryset = queryset.exclude(user_id=user_id)
+        return queryset
 
 
 class UserView(generics.RetrieveAPIView):
@@ -424,3 +429,14 @@ class ZaptriggerView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.request.user.id
         return ZapTriggers.objects.filter(userfor=user_id).order_by('-trigger_date')
+    
+class FutureCapsules(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = TimeCapsuleSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        return TimeCapsule.objects.filter(is_private=False, available_date__gt=timezone.now(
+        )).exclude(user=user_id).order_by('-publish_date')
+    search_fields = ['hashtags', 'content', 'title']
+    

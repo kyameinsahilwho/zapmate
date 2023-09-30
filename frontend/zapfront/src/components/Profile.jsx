@@ -26,7 +26,7 @@ export default function Profile() {
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds left`;
+        return `${days} days\n ${hours} hours\n ${minutes} minutes\n ${seconds} seconds left`;
       });
 
       setCountdownStrings(strings);
@@ -212,7 +212,7 @@ export default function Profile() {
                   ) : (
                     postedCapsules.map((item) => (
                       <a onClick={() => handlePostView(item.id)} key={item.id}>
-                        <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100">
+                        <div className="lg:hover:scale-105 hover:shadow-lg hover:z-10 duration-500 delay-100 shadow-xl shadow-black rounded-lg">
                           <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
                             <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md">
                               <img
@@ -291,21 +291,21 @@ export default function Profile() {
       upcomingCapsules.map((item, index) => {
         return (
           <a key={item.id}>
-            <div className="lg:scale-105 shadow-lg z-10">
+            <div className="rounded-lg text-center drop-shadow shadow-xl z-10 shadow-black">
               <div className="relative overflow-hidden rounded-lg uk-transition-toggle">
                 <div className="relative w-full lg:h-60 h-full aspect-[3/3] shadow-md blur-[9px]">
                   <img
                     src={item.image}
                     alt=""
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full filter brightness-50"
                   />
                 </div>
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-sm  shadow-md">
+                <div className="absolute inset-0 bg-white/5 backdrop-blur-xl">
                   <div className="flex items-center flex-col justify-center gap-4 text-white w-full h-full shadow-md">
-                    <div className="flex items-center text-xl capitalize gap-2">
+                    <div className="flex items-center text-xl capitalize gap-2 drop-shadow  font-semibold">
                       {item.title}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex drop-shadow font-semibold items-center gap-2 whitespace-pre-line capitalize">
                       {countdownStrings[index]}
                     </div>
                   </div>

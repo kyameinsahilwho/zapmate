@@ -24,5 +24,6 @@ urlpatterns = [
     path('home/',HomeView.as_view(),name='home'),
     path('homehastags/',HomeHashtagsView.as_view(),name='home-hashtags'),
     path('zaptriggers/',ZaptriggerView.as_view(),name='zap-triggers'),
+    path('futurecapsules/',FutureCapsules.as_view(),name='future-capsules'),
 
 ]
