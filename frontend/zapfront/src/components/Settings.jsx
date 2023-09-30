@@ -462,19 +462,6 @@ export default function Settings() {
                         />
                       </div>
                     </div>
-                    <hr className="border-gray-100 dark:border-gray-700" />
-                    <div className="md:flex items-center gap-16 justify-between">
-                      <label className="md:w-40 text-right">
-                        {" "}
-                        Two-factor authentication{" "}
-                      </label>
-                      <div className="flex-1 max-md:mt-4">
-                        <select className="w-full !border-0 !rounded-md">
-                          <option value={1}>Enable</option>
-                          <option value={2}>Disable</option>
-                        </select>
-                      </div>
-                    </div>
                   </div>
                   <div className="flex items-center justify-center gap-4 mt-16">
                     <button

@@ -442,7 +442,7 @@ export default function Home() {
                   </div>
                   <div className="space-y-3.5 capitalize text-xs font-normal mt-5 mb-2 text-gray-600 dark:text-white/80">
                     {hashtags.map((hashtag) => (
-                      <a href={`/hashtags/${hashtag.name}`} key={hashtag.name}>
+                      <a href="#" key={hashtag.name}>
                         <div className="flex items-center gap-3 p">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
