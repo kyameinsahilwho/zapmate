@@ -203,18 +203,7 @@ export default function Settings() {
                     General
                   </a>
                 </li>
-                <li className="w-auto pr-2.5">
-                  <a
-                    href="#"
-                    className={`inline-block p-4 pt-2 border-b-2 border-transparent ${
-                      activeTab === 1 ? "text-blue-500 border-blue-500" : ""
-                    }`}
-                    onClick={() => handleTabClick(1)}
-                    aria-expanded={activeTab === 1 ? "true" : "false"}
-                  >
-                    Alerts
-                  </a>
-                </li>
+                
                 <li className="w-auto pr-2.5">
                   <a
                     href="#"
@@ -307,17 +296,7 @@ export default function Settings() {
                         />
                       </div>
                     </div>
-                    <div className="md:flex items-center gap-10">
-                      <label className="md:w-32 text-right"> Gender </label>
-                      <div className="flex-1 max-md:mt-4">
-                        <select className="!border-0 !rounded-md lg:w-1/2 w-full">
-                          <option value={1}>Male</option>
-                          <option value={2}>Female</option>
-                          <option value={3}>Other</option>
-                          <option value={4}>Rather not say</option>
-                        </select>
-                      </div>
-                    </div>
+                    
                   </div>
                   <div className="flex items-center justify-center gap-4 mt-16">
                     <button
@@ -330,72 +309,7 @@ export default function Settings() {
                 </div>
               </form>
             </div>
-            {/* tab alerts */}
-            <div>
-              <div>
-                <div className="font-normal text-gray-400 text-sm">
-                  <div>
-                    <h4 className="text-lg font-semibold text-black dark:text-white">
-                      {" "}
-                      Alerts preferences{" "}
-                    </h4>
-                    <p className=" mt-3">
-                      We may still send you important notifications about your
-                      account and content outside of you preferred notifications
-                      settings.
-                    </p>
-                  </div>
-                  <div
-                    className="mt-8 md:space-y-8 space-y-4"
-                    uk-scrollspy="target: > div; cls: uk-animation-slide-bottom-medium; delay: 100 ;repeat: true"
-                  >
-                    <div className="w-full">
-                      <label className="switch flex justify-between items-center cursor-pointer gap-4">
-                        <div className="bg-sky-100 text-sky-500 rounded-full p-2 md:flex hidden shrink-0">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1 md:pr-8">
-                          <h4 className="text-base font-medium mb-1.5 text-black dark:text-white">
-                            {" "}
-                            Email notifications
-                          </h4>
-                          <p className>
-                            {" "}
-                            You can receive notifications about important
-                            updates and content directly to your email inbox.{" "}
-                          </p>
-                        </div>
-                        <input type="checkbox" defaultChecked />
-                        <span className="switch-button !relative" />
-                      </label>
-                    </div>
-                    
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-4 mt-16">
-                  <button
-                    type="submit"
-                    className="button lg:px-10 bg-primary text-white max-md:flex-1"
-                  >
-                    {" "}
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
+            
             {/* tab password*/}
             <div>
               <div>

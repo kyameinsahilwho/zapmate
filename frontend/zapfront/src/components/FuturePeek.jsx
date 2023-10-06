@@ -20,6 +20,9 @@ export default function FuturePeek() {
     setSearchTerm(event.target.value);
   };
   async function fetchData() {
+    setCountdowns([]);
+    setCountdownStrings([]);
+    setFuturecapsules([]);
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
     ).access;
@@ -207,7 +210,7 @@ export default function FuturePeek() {
                   </div>
                   <div className="absolute inset-0 bg-white/5 backdrop-blur-xl rounded-xl">
                     <div className="flex items-center rounded-xl flex-col justify-center gap-4 text-white w-full h-full shadow-md">
-                      <div className="flex items-center text-3xl capitalize gap-2 drop-shadow font-semibold">
+                      <div className="flex items-center text-xl capitalize gap-2 drop-shadow font-semibold">
                         {post.title}
                       </div>
                       <div className="flex drop-shadow font-semibold items-center gap-2 whitespace-pre-line capitalize">
