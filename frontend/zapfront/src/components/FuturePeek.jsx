@@ -20,9 +20,9 @@ export default function FuturePeek() {
     setSearchTerm(event.target.value);
   };
   async function fetchData() {
-    setCountdowns([]);
-    setCountdownStrings([]);
-    setFuturecapsules([]);
+    // setCountdowns([]);
+    // setCountdownStrings([]);
+    // setFuturecapsules([]);
     const accessToken = JSON.parse(
       localStorage.getItem("zapmateAuthTokens")
     ).access;
@@ -90,9 +90,8 @@ export default function FuturePeek() {
     }, 1000);
 
     return () => {
-      if (countdowns.length === 0) {
         clearInterval(interval);
-      }
+      
     };
   }, [countdowns]);
   useEffect(() => {
