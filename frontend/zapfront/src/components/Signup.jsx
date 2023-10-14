@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
+import AuthContext from "../context/Auth";
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginUser } = useContext(AuthContext);
 
   async function handleSubmit(event) {
+    
     event.preventDefault(); // Prevent the default form submission behavior
 
     try {
@@ -29,8 +32,8 @@ export default function Signup() {
 
       // Handle the response from the server
       if (response.ok) {
-        alert("User Created Successfully! Now Login");
-        navigate("/login", { replace: true });
+        alert("User Created Successfully!");
+        loginUser(event);
       } else {
         // Handle the error
         alert("Something went wrong while creating the user!");

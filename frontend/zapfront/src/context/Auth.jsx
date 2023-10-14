@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(data);
         setUser(jwtDecode(data.access));
         setIsAuthenticated(true);
-        toast.success("Logged in Successfully");
         setLoading(false);
         navigate("/", { replace: true });
       } else {

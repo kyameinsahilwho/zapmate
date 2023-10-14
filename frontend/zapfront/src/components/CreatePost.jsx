@@ -38,6 +38,11 @@ export default function CreatePost(props) {
     console.log(responseUpdate);
     if (responseUpdate.status === 201) {
       toast.success("Capsule Created successfully!");
+      setPreview(null);
+      setTitle("");
+      setTimeout(() => {
+        props.handleCreatePost();
+      }, 1000);
     } else {
       toast.error("Something went wrong");
     }
@@ -56,8 +61,8 @@ export default function CreatePost(props) {
     const file = e.target.files[0];
     setImage(file);
   };
-    
-  if(!props.createPost){
+
+  if (!props.createPost) {
     return null;
   }
   return (
@@ -67,11 +72,8 @@ export default function CreatePost(props) {
 
       <div className="tt fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[150] h-fit mx-auto bg-white shadow-xl rounded-lg w-[90%] max-w-[902px]  dark:bg-dark2">
         <ul className=" p-3.5 border-b text-center text-sm font-semibold text-black dark:text-white dark:border-slate-700">
-          <li className="flex justify-between items-center" >
-            <a
-              onClick={props.handleCreatePost}
-              className=""
-            >
+          <li className="flex justify-between items-center">
+            <a onClick={props.handleCreatePost} className="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -318,7 +320,9 @@ export default function CreatePost(props) {
                             const date = new Date(e.target.value);
                             date.setHours(date.getHours() + 5);
                             date.setMinutes(date.getMinutes() + 30);
-                            const formattedDate = date.toISOString().slice(0, 16);
+                            const formattedDate = date
+                              .toISOString()
+                              .slice(0, 16);
                             setDate(formattedDate);
                           }}
                           placeholder="Chrono Unlock"
@@ -357,6 +361,4 @@ export default function CreatePost(props) {
       </div>
     </>
   );
-
-  
 }
